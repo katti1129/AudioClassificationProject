@@ -31,7 +31,7 @@ class ReduceSumLayer(layers.Layer):
 # ==========================================
 # 2. 設定・パラメータ
 # ==========================================
-MODEL_PATH = "/Users/katti/Desktop/Lab/AudioClassificationTesting/code/best.keras"
+MODEL_PATH = "model/best.keras"
 
 # 学習時のアルファベット順に合わせる
 CLASS_NAMES = ['other', 'siren']
