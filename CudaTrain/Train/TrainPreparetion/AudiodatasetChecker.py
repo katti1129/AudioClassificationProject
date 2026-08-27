@@ -1,12 +1,14 @@
-import sys
+import json
 import shutil
+import sys
+import time
 from pathlib import Path
 
 import numpy as np
 import sounddevice as sd
 import soundfile as sf
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QApplication,
@@ -23,6 +25,9 @@ from PySide6.QtWidgets import (
 
 
 AUDIO_EXTENSIONS = {".wav", ".flac", ".ogg", ".aiff", ".aif"}
+PROGRESS_FILE_NAME = ".audio_dataset_checker_progress.json"
+AUDIO_LEVEL_WINDOW_SECONDS = 0.1
+MIN_DBFS = -100.0
 
 
 class AudioDatasetChecker(QMainWindow):
@@ -30,12 +35,23 @@ class AudioDatasetChecker(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Audio Dataset Checker")
-        self.resize(760, 430)
+        self.resize(760, 500)
 
         self.folder = None
         self.audio_files = []
         self.index = 0
         self.last_excluded = None
+        self.reviewed_files = set()
+        self.playback_started_at = None
+        self.playback_duration = 0.0
+        self.playback_audio = None
+        self.playback_samplerate = None
+        self.overall_rms_dbfs = MIN_DBFS
+        self.peak_dbfs = MIN_DBFS
+
+        self.playback_timer = QTimer(self)
+        self.playback_timer.setInterval(50)
+        self.playback_timer.timeout.connect(self._update_playback_position)
 
         self._build_ui()
         self._setup_shortcuts()
@@ -105,6 +121,30 @@ class AudioDatasetChecker(QMainWindow):
         play_row.addWidget(self.stop_button)
         layout.addLayout(play_row)
 
+        self.playback_position_label = QLabel("0.00 / 0.00 秒")
+        self.playback_position_label.setAlignment(Qt.AlignCenter)
+
+        self.playback_progress_bar = QProgressBar()
+        self.playback_progress_bar.setRange(0, 1)
+        self.playback_progress_bar.setValue(0)
+        self.playback_progress_bar.setTextVisible(False)
+
+        layout.addWidget(self.playback_position_label)
+        layout.addWidget(self.playback_progress_bar)
+
+        self.audio_level_label = QLabel(
+            "音量 RMS: 現在 -- dBFS / 全体 -- dBFS / Peak -- dBFS"
+        )
+        self.audio_level_label.setAlignment(Qt.AlignCenter)
+
+        self.audio_level_bar = QProgressBar()
+        self.audio_level_bar.setRange(0, 1000)
+        self.audio_level_bar.setValue(0)
+        self.audio_level_bar.setTextVisible(False)
+
+        layout.addWidget(self.audio_level_label)
+        layout.addWidget(self.audio_level_bar)
+
         # Classification
         action_row = QHBoxLayout()
 
@@ -173,10 +213,13 @@ class AudioDatasetChecker(QMainWindow):
             key=lambda p: str(p.relative_to(self.folder)).lower(),
         )
 
+        self._load_progress()
+
         # _excluded は走査対象外
         excluded_dir.mkdir(exist_ok=True)
 
         self.index = 0
+        self._skip_reviewed_files()
         self.last_excluded = None
         self.folder_label.setText(str(self.folder))
         self._update_ui()
@@ -194,6 +237,68 @@ class AudioDatasetChecker(QMainWindow):
             return self.audio_files[self.index]
         return None
 
+    def _progress_path(self):
+        if self.folder is None:
+            return None
+        return self.folder / PROGRESS_FILE_NAME
+
+    def _relative_key(self, path):
+        return path.relative_to(self.folder).as_posix()
+
+    def _skip_reviewed_files(self):
+        while (
+            self.index < len(self.audio_files)
+            and self._relative_key(self.audio_files[self.index])
+            in self.reviewed_files
+        ):
+            self.index += 1
+
+    def _load_progress(self):
+        progress_path = self._progress_path()
+        self.reviewed_files = set()
+
+        if progress_path is None or not progress_path.exists():
+            return
+
+        try:
+            progress = json.loads(progress_path.read_text(encoding="utf-8"))
+            reviewed = progress.get("reviewed_files", [])
+            if not isinstance(reviewed, list):
+                raise ValueError("reviewed_files must be a list")
+            self.reviewed_files = {
+                item for item in reviewed if isinstance(item, str)
+            }
+        except (OSError, json.JSONDecodeError, ValueError) as e:
+            QMessageBox.warning(
+                self,
+                "進捗の読み込みエラー",
+                f"保存済みの進捗を読み込めなかったため、最初から開始します。\n\n{e}",
+            )
+
+    def _save_progress(self):
+        progress_path = self._progress_path()
+        if progress_path is None:
+            return
+
+        progress = {
+            "version": 1,
+            "reviewed_files": sorted(self.reviewed_files),
+        }
+        temporary_path = progress_path.with_suffix(progress_path.suffix + ".tmp")
+
+        try:
+            temporary_path.write_text(
+                json.dumps(progress, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+            temporary_path.replace(progress_path)
+        except OSError as e:
+            QMessageBox.warning(
+                self,
+                "進捗の保存エラー",
+                f"進捗を保存できませんでした。\n\n{e}",
+            )
+
     def play_audio(self):
         path = self.current_file()
         if path is None:
@@ -208,6 +313,21 @@ class AudioDatasetChecker(QMainWindow):
             data = np.nan_to_num(data)
 
             sd.play(data, samplerate)
+            self.playback_audio = data
+            self.playback_samplerate = samplerate
+            self.overall_rms_dbfs = self._calculate_rms_dbfs(data)
+            self.peak_dbfs = self._calculate_peak_dbfs(data)
+            self.playback_duration = len(data) / samplerate
+            self.playback_started_at = time.monotonic()
+            self.playback_progress_bar.setRange(
+                0, max(1, round(self.playback_duration * 1000))
+            )
+            self.playback_progress_bar.setValue(0)
+            self.playback_position_label.setText(
+                f"0.00 / {self.playback_duration:.2f} 秒"
+            )
+            self._update_audio_level(0.0)
+            self.playback_timer.start()
             self.status_label.setText("再生中")
         except Exception as e:
             QMessageBox.critical(
@@ -217,20 +337,101 @@ class AudioDatasetChecker(QMainWindow):
             )
 
     def stop_audio(self):
+        self.playback_timer.stop()
+        self.playback_started_at = None
+        self.playback_duration = 0.0
+        self.playback_audio = None
+        self.playback_samplerate = None
+
         try:
             sd.stop()
         except Exception:
             pass
 
+        self.playback_progress_bar.setRange(0, 1)
+        self.playback_progress_bar.setValue(0)
+        self.playback_position_label.setText("0.00 / 0.00 秒")
+
         if self.current_file() is not None:
             self.status_label.setText("確認してください")
 
+    @staticmethod
+    def _amplitude_to_dbfs(amplitude):
+        if amplitude <= 0:
+            return MIN_DBFS
+        return max(MIN_DBFS, 20.0 * np.log10(amplitude))
+
+    def _calculate_rms_dbfs(self, data):
+        samples = np.asarray(data, dtype=np.float64)
+        if samples.size == 0:
+            return MIN_DBFS
+        rms = np.sqrt(np.mean(np.square(samples)))
+        return self._amplitude_to_dbfs(rms)
+
+    def _calculate_peak_dbfs(self, data):
+        samples = np.asarray(data, dtype=np.float64)
+        if samples.size == 0:
+            return MIN_DBFS
+        return self._amplitude_to_dbfs(np.max(np.abs(samples)))
+
+    def _update_audio_level(self, elapsed):
+        if self.playback_audio is None or self.playback_samplerate is None:
+            return
+
+        window_samples = max(
+            1, round(AUDIO_LEVEL_WINDOW_SECONDS * self.playback_samplerate)
+        )
+        start = min(
+            round(elapsed * self.playback_samplerate),
+            max(0, len(self.playback_audio) - window_samples),
+        )
+        end = min(start + window_samples, len(self.playback_audio))
+        current_dbfs = self._calculate_rms_dbfs(self.playback_audio[start:end])
+
+        self.audio_level_label.setText(
+            f"音量 RMS: 現在 {current_dbfs:.1f} dBFS / "
+            f"全体 {self.overall_rms_dbfs:.1f} dBFS / "
+            f"Peak {self.peak_dbfs:.1f} dBFS"
+        )
+        level = round((current_dbfs - MIN_DBFS) / -MIN_DBFS * 1000)
+        self.audio_level_bar.setValue(max(0, min(1000, level)))
+
+    def _reset_audio_level_display(self):
+        self.audio_level_label.setText(
+            "音量 RMS: 現在 -- dBFS / 全体 -- dBFS / Peak -- dBFS"
+        )
+        self.audio_level_bar.setValue(0)
+
+    def _update_playback_position(self):
+        if self.playback_started_at is None:
+            return
+
+        elapsed = min(
+            time.monotonic() - self.playback_started_at,
+            self.playback_duration,
+        )
+        self.playback_progress_bar.setValue(round(elapsed * 1000))
+        self.playback_position_label.setText(
+            f"{elapsed:.2f} / {self.playback_duration:.2f} 秒"
+        )
+        self._update_audio_level(elapsed)
+
+        if elapsed >= self.playback_duration:
+            self.playback_timer.stop()
+            self.playback_started_at = None
+            if self.current_file() is not None:
+                self.status_label.setText("再生完了")
+
     def keep_and_next(self):
-        if self.current_file() is None:
+        path = self.current_file()
+        if path is None:
             return
 
         self.stop_audio()
+        self.reviewed_files.add(self._relative_key(path))
+        self._save_progress()
         self.index += 1
+        self._skip_reviewed_files()
         self._update_ui()
 
     def exclude_and_next(self):
@@ -276,6 +477,8 @@ class AudioDatasetChecker(QMainWindow):
         # 現在の項目をリストから除去する。
         # indexはそのままにすると、次のファイルが同じindexに繰り上がる。
         self.audio_files.pop(self.index)
+        self._save_progress()
+        self._skip_reviewed_files()
         self._update_ui()
 
     def undo_last_exclusion(self):
@@ -321,6 +524,7 @@ class AudioDatasetChecker(QMainWindow):
         self._update_ui()
 
     def _update_ui(self):
+        self._reset_audio_level_display()
         total = len(self.audio_files)
         path = self.current_file()
 
@@ -364,6 +568,7 @@ class AudioDatasetChecker(QMainWindow):
 
     def closeEvent(self, event):
         self.stop_audio()
+        self._save_progress()
         event.accept()
 
 
