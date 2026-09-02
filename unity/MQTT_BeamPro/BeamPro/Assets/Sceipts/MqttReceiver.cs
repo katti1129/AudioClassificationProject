@@ -9,7 +9,7 @@ using MQTTnet.Client;
 public class MqttReceiver : MonoBehaviour
 {
     [Header("MQTT Settings")]
-    [SerializeField] private string brokerAddress = "192.168.1.100";
+    [SerializeField] private string brokerAddress = "133.49.27.137";
     [SerializeField] private int brokerPort = 1883;
     [SerializeField] private string topic = "research/ambulance/v1/state";
 
