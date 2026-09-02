@@ -313,4 +313,7 @@ sysinfo.txt
 *.png
 *.png.meta
 
-
+# Keep all source assets required by Unity projects.
+!unity/**/Assets/
+!unity/**/Assets/**/
+!unity/**/Assets/**
