@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Siren / Spatial direction lab</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="masthead"><div class="brand"><span class="brand-mark">↗</span><div><h1>SIREN <span>/ SPATIAL LAB</span></h1><p>音の方向を、視界の中へ。</p></div></div><span class="badge">RESEARCH MOCKUP · v1.0</span></header>
+  <main>
+    <section class="view-panel" aria-label="XREAL VIEW">
+      <div class="section-heading"><h2>XREAL VIEW</h2><span>SIMULATED AR · 3D</span></div>
+      <div id="viewport">
+        <div class="view-top"><span class="live-dot"></span> WORLD SPACE <span id="heading">HEAD 0°</span></div>
+        <div class="reticle" aria-hidden="true">+</div>
+        <div id="alert" class="alert" role="status">
+          <svg class="ambulance-icon" viewBox="0 0 80 52" aria-hidden="true"><path d="M5 10h43v29H5zM48 21h15l12 12v6H48z"/><path d="M53 25h8l7 8H53z"/><path class="medical-cross" d="M24 16h8v7h7v8h-7v7h-8v-7h-7v-8h7z"/><path d="M21 5h13v5H21z"/><circle cx="19" cy="41" r="6"/><circle cx="61" cy="41" r="6"/></svg>
+          <div><div id="alert-title" class="alert-title">救急車</div><div id="alert-status" class="alert-sub">サイレンを検知</div><div class="alert-data">矢印の方向に注意してください</div></div>
+        </div>
+        <div class="view-bottom"><span id="visibility">初期化中…</span><span>RADIUS <b>2.5 m</b> · EYE <b>1.6 m</b></span></div>
+        <div id="error" role="alert" hidden></div>
+      </div>
+      <div class="telemetry"><div><span>DISPLAY ANGLE</span><strong id="display-angle">20°</strong></div><div><span>HEAD YAW</span><strong id="yaw-readout">0°</strong></div><div><span>ARROW · X / Z</span><strong id="position">—</strong></div></div>
+      <p class="view-note">視点だけを回して、空間に残る矢印を確認。<b>Back → Head Yaw 180°</b> で後方を見渡せます。</p>
+    </section>
+    <aside class="controls" aria-label="CONTROL PANEL">
+      <div class="section-heading"><h2>CONTROL PANEL</h2><span>LOCAL SIMULATION</span></div>
+      <section class="control-section"><div class="section-label">01 / DETECTION</div>
+        <label class="toggle-row" for="detected"><span>Siren Detected<small>検知状態をシミュレーション</small></span><input id="detected" type="checkbox" role="switch" checked></label>
+        <div class="control-label"><label for="confidence">Confidence</label><output id="confidence-value">98.0%</output></div><input id="confidence" type="range" min="0" max="100" step="0.1" value="98"><div class="range-labels"><span>0%</span><span>100%</span></div>
+        <div class="confidence-legend"><span><i class="low"></i>低：50%未満</span><span><i class="medium"></i>中：50–79.9%</span><span><i class="high"></i>高：80%以上</span></div><p class="hint">色分けは仮設定。数値は調整用で、ユーザー視界には表示しません。</p>
+      </section>
+      <section class="control-section"><div class="section-label">02 / SOUND DIRECTION</div>
+        <div class="control-label"><label for="doa">DOA</label><span><input id="doa-number" aria-label="DOA 数値" type="number" min="0" max="359" step="1" value="20"> °</span></div><input id="doa" type="range" min="0" max="359" step="1" value="20"><div class="range-labels"><span>0°</span><span>359°</span></div>
+        <div class="presets"><button data-doa="0">Front</button><button data-doa="90">Right</button><button data-doa="180">Back</button><button data-doa="270">Left</button></div>
+        <button id="demo" class="demo" aria-pressed="false">▶ Demo <span>ゆっくり360°回転</span></button>
+      </section>
+      <section class="control-section"><div class="section-label">03 / CALIBRATION & VIEW</div>
+        <div class="control-label"><label for="offset">DOA Offset</label><output id="offset-value">0°</output></div><input id="offset" type="range" min="-180" max="180" step="1" value="0"><div class="range-labels"><span>−180°</span><span>+180°</span></div>
+        <label class="toggle-row compact" for="invert"><span>Invert DOA</span><input id="invert" type="checkbox" role="switch"></label>
+        <div class="control-label"><label for="yaw">Head Yaw</label><output id="yaw-value">0°</output></div><input id="yaw" type="range" min="-180" max="180" step="1" value="0"><div class="range-labels"><span>−180°</span><span>+180°</span></div>
+        <p class="hint">Head Yaw はカメラのみ回転。DOA は保持されます。</p>
+      </section>
+      <details class="payload" open><summary>MQTT Payload Preview <span>JSON</span></summary><code class="topic">research/ambulance/v1/state</code><pre id="payload"></pre><p class="hint">疑似データのみ · MQTT通信なし</p></details>
+    </aside>
+  </main>
+  <footer><span>ReSpeaker → Jetson → MQTT → Beam Pro → XREAL</span><span>Web concept preview / 実機の視野角・光学特性は再現しません</span></footer>
+  <script>
+    window.addEventListener('error', function (event) { const box = document.getElementById('error'); box.hidden = false; box.textContent = '表示エラー: ' + (event.message || 'リソースの読み込みに失敗しました。'); });
+    window.addEventListener('unhandledrejection', function (event) { const box = document.getElementById('error'); box.hidden = false; box.textContent = '初期化エラー: ' + event.reason; });
+  </script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

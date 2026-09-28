@@ -1,0 +1,6 @@
+<linker>
+  <!-- JSON fields are populated by reflection on the IL2CPP player. -->
+  <assembly fullname="AmbulanceAR.Runtime">
+    <type fullname="AmbulanceAR.AmbulanceState" preserve="all" />
+  </assembly>
+</linker>

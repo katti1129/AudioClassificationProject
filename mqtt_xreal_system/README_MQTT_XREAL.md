@@ -1,5 +1,51 @@
 # Jetson -> MQTT -> Beam Pro -> XREAL Air 2 Ultra
 
+## 完成版システム（2026-09-26）
+
+実機版は基準版から分離しています。最初にこちらを参照してください。
+
+| 場所 | 役割 |
+| --- | --- |
+| [Jetson_Final](Jetson_Final/README.md) | ReSpeaker / CRNN / PySide6 / MQTT / CSVを統合した起動入口 |
+| [BeamPro_Final](../unity/MQTT_BeamPro/BeamPro_Final/README.md) | Unity 6000.0.55f1、XREAL SDK、6DoF、World Space 3D矢印 |
+| [Mosquitto](Mosquitto/xreal-local.conf) | 既存の実験LAN用Broker設定（変更なし） |
+| [Web_AR_Mockup](Web_AR_Mockup/README.md) | デザイン参照元（今回変更なし） |
+| [構成](docs/system_architecture.md) / [MQTT仕様](docs/mqtt_protocol.md) / [校正](docs/calibration.md) | 技術資料 |
+| [検証報告](docs/verification.md) | 実行済みテスト・ビルド結果・残る実機確認 |
+
+必要機材はJetson Orin Nano、ReSpeaker USB Mic Array v2.0、Beam Pro、XREAL Air 2 Ultra、固定用ヘルメットと同一Wi-Fi/LANです。
+
+再開後の確認：Jetson既存10テスト成功、Unity21テスト成功（保存済みSceneのPlay Modeを含む）、Android ARM64 APK生成成功・エラー0。既存正常版185ファイルはSHA256一致。実機未接続のためReSpeaker推論／Beam Pro＋Air 2 Ultraの6DoF／Wi-Fi総合確認は未実施です。SDK由来の残る警告は[検証報告](docs/verification.md)に記載しています。
+
+### 起動の順序
+
+1. Jetsonの既存推論環境と学習済みモデルを用意し、ReSpeakerを接続。
+2. 下記の既存Mosquitto起動手順を実施。`hostname -I` でLAN IPを確認。
+3. リポジトリルートで `python -m mqtt_xreal_system.Jetson_Final.app.realtime_xreal_system --model /path/best.keras --broker 127.0.0.1 --log-dir ./experiment_logs` を実行。
+4. Unity Hubで **`unity/MQTT_BeamPro/BeamPro_Final/`** を6000.0.55f1で開き、`Assets/AmbulanceAR/Scenes/AmbulanceARScene.unity` を選択。
+5. `Ambulance System > AmbulanceMqttSubscriber > Broker Host` をJetsonのLAN IPへ変更してSceneを保存。
+6. Editor PlayでSimulationを確認。Back→Head Yaw180°、検知OFF、Unknown、Stop packetsを試す。
+7. `Ambulance AR > 3. Build Beam Pro APK`。生成先 `Builds/AmbulanceAR.apk`。
+8. `adb devices` でBeam Proを確認し、`adb install -r <APKのパス>`。
+9. Air 2 UltraをBeam Proへ接続し、MyGlassesからAmbulance ARを起動。頭部追跡・LAN通信を確認。
+10. [校正手順](docs/calibration.md)に従い、正面・右・後・左と頭部回転を試す。
+
+XREAL SDKは作業PCにあった3.0.0-pre.4を完成版へ埋込済み。Unity 6000.0.xが[公式対応範囲](https://docs.xreal.com/Getting%20Started%20with%20XREAL%20SDK)であることを確認し、MODE_6DOF / REALITY / OpenGL ES3 / IL2CPP / ARM64 / INTERNETを構成しています。公開版3.1.0との差と確認できた範囲は検証報告に記載しています。
+
+### トラブルシューティング
+
+- MQTT接続不能：同じLAN、Broker起動、IP・1883、APの端末間通信制限を確認。Beam Proの127.0.0.1はJetsonではありません。
+- 接続済みでもstale：v1形式・0.1秒周期を確認。既存簡易JSONは完成版では拒否します。[完成版テストPublisher](Jetson_Final/tests/mqtt_test_publisher.py)を使用。
+- 警告だけで矢印なし：DOA −1、USB権限、6DoF追跡、XREAL Loaderを確認。後方音源は振り返るまで見えません。
+- 左右逆／正面が違う：初期Invert=true / Offset=270°を基準に実機校正。
+- 頭を回すと方向が揺れる：DOAと姿勢の時間差、LAN遅延、反射音、Pose Lookbackと平滑化を確認。
+- モデルが読めない：`--model`、JetPack対応TensorFlow、既存モデルの前処理・クラス順を確認。
+- Editorでは見えるが実機で表示されない：6DoF/REALITY、MyGlassesからの起動、権限、追跡状態を確認。SimulationはAPKでは無効です。
+
+以下は**既存MQTTプロトタイプの資料**です。基準版の起動・経緯を保存するため残しています。完成版では上記のSceneとエントリーポイントを使用してください。
+
+---
+
 ## Target message
 
 Topic:

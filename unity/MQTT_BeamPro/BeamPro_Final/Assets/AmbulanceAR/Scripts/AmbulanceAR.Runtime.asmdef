@@ -1,0 +1,5 @@
+{
+  "name": "AmbulanceAR.Runtime",
+  "references": ["Unity.TextMeshPro", "Unity.ugui", "Unity.InputSystem", "Unity.XR.Management", "Unity.XR.CoreUtils", "Unity.XR.XREAL", "Unity.Newtonsoft.Json"],
+  "autoReferenced": true
+}

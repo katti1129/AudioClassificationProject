@@ -1,0 +1,742 @@
+﻿[
+    {
+        "Path":  "System\\Jetson_MQTT.py",
+        "Hash":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "System\\Jetson_MQTT_Test.py",
+        "Hash":  "7509D44C5948C9B292CB92C6C971C9FD2BA05A59CC1D4D1EF3D5598FA2E3AA8D"
+    },
+    {
+        "Path":  "System\\RealtimeAudioClassificationSystem_GUI.py",
+        "Hash":  "DD401094BBDC1AEFC524D3463EFCBF696D10B9394917BF77D83621969E6491FB"
+    },
+    {
+        "Path":  "System\\tuning.py",
+        "Hash":  "5993C591667BF8D00CB99A67D7342CA710E63EBEE9C0B21B49D4F54890A5EEE5"
+    },
+    {
+        "Path":  "System\\MicTest\\FormatChecker.py",
+        "Hash":  "DA302EAC08E62F3539B7DF995AAC9B9A5BECDD750012063DA486200B5EAA0376"
+    },
+    {
+        "Path":  "System\\MicTest\\MicTest.py",
+        "Hash":  "91F2C7D1CEAD91DA0647A93735C8ACA335F496AA2EB6C478E7FD57753E326DBA"
+    },
+    {
+        "Path":  "System\\MicTest\\ReSpeakerRealTime.py",
+        "Hash":  "DC5FAB331B034F6756ED6B3E5DB2236F7CEDB249432FE9268B6AFBB7C500F61B"
+    },
+    {
+        "Path":  "System\\MicTest\\Test.py",
+        "Hash":  "39EBC72FFA831A95D7E4D82F326BF979541B7C70F70773ED64002A3CE67F3E2D"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\InputSystem_Actions.inputactions",
+        "Hash":  "CD5A6308F9BCE6DDAC2023B5ED185FF6BC36AC09FBFD9680054D367822203812"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\InputSystem_Actions.inputactions.meta",
+        "Hash":  "3B4E424A80F5B4FA76B6ABD774884A24285EAA61F22FF9BB20E5AD505FD8B569"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\NuGet.config",
+        "Hash":  "0A3CAE6CC872BC672478EC649B96FD72EFA91A700B063CA3C914AA6CB0F1F757"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\NuGet.config.meta",
+        "Hash":  "B1A796E7A0D5526AC71A5088C98601B5D334AB8FCD651AAFC232491CDEB90CAF"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\packages.config",
+        "Hash":  "FB0773ADE267F9D47ADEA1F9EF0C2EB01205039AD7FE05E8944507D889E927A4"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\packages.config.meta",
+        "Hash":  "2F582D3C348FAB665D40FD30464F6DDAC3221960C29E2062248EE7A68B2023AA"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages.meta",
+        "Hash":  "8652442EF543079F91F3A9604519436A95D079CBA1D69F500B176F8E30CEB14A"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Readme.asset",
+        "Hash":  "6D098604E909B6A0E64FE5910C2719704864D49678BCF5413BD47B67E5490107"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Readme.asset.meta",
+        "Hash":  "46C6B89AC1D47BD0C0D1A8B141AE3E32CD95D3E74C49381F0D9F942488C254CE"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Sceipts.meta",
+        "Hash":  "3E137116E13B65A3B14273CF179DCAC3E6DB13B78B56F5439DBB2C70786BA42F"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Scenes.meta",
+        "Hash":  "92598EF42AEAA7813A50E780BCEE1AD6C832B257592D09FFB0E6FB6116BB703F"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings.meta",
+        "Hash":  "73C8E19843240273FACB0AF6BDBF430D719E397ADED705629594060CE25CE7AD"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro.meta",
+        "Hash":  "8529D84D190A68AEB1A16E0A90308081BD30A738DBCC63C63B2A93C53B9A11B3"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo.meta",
+        "Hash":  "07F022E5932C833D026E020B27D73452EBD781993B616D76003494AF1E140946"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\UI.meta",
+        "Hash":  "0C23D01909B86CDBB726ED9D4D6BE9855BE0369CDC2D83F3E2A1A3372F54C492"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207.meta",
+        "Hash":  "7DEA239CD3B9CD8C18654528272D17A73908D513AF48248D6E51C19877E9207B"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\.signature.p7s",
+        "Hash":  "C97CF4606341FE2A192259A36CBC8548B61BC22F8DDF1E146307C3947322E388"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\lib.meta",
+        "Hash":  "61008C149DCB480D9CDC95D5C3F685E0FCB0FF31F1A3A8CED870DFC218FDE945"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\MQTTnet.nuspec",
+        "Hash":  "F6A2AE36727D911982A4871995F0100C1274CDECCBF3D1069FD364DE20A32F53"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\MQTTnet.nuspec.meta",
+        "Hash":  "6B4B9CACC4BFA2EDCDCD8AB9117737CB84F4DE70175F5DFDA1FC2875F32166C0"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\nuget.png",
+        "Hash":  "BD7C1F1B5BBB7C461CF6AAD06F8E5C45B1A35ABB88760FD7C82BE3A251A185F4"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\nuget.png.meta",
+        "Hash":  "3533B67581F0F37FFA3EBA62B31FF0747E3795375F984F563072D7050AD5E882"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\lib\\netstandard2.1.meta",
+        "Hash":  "E3B27C941C01820122B3B850C47417FC0DA8939CAD72D126DD51459A189C685B"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\lib\\netstandard2.1\\MQTTnet.dll",
+        "Hash":  "270511E90285FC14FA78AB4DC112A438B2FAFD7467A37BF795FE963400432AEA"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\lib\\netstandard2.1\\MQTTnet.dll.meta",
+        "Hash":  "A7C79E95A5636AAF521036488A3CB871313E41AA50CB05CDBAB989F56A1AAC15"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\lib\\netstandard2.1\\MQTTnet.xml",
+        "Hash":  "7F806262D98EFFEE61C5DF54C7309988F2E5AC06AED38110B105FCC80FC767F1"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Packages\\MQTTnet.4.3.7.1207\\lib\\netstandard2.1\\MQTTnet.xml.meta",
+        "Hash":  "D515EA9809A87553BA2634C793CA19D2B97F124391F5CFF37A35C74E2E7119AE"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Sceipts\\MqttReceiver.cs",
+        "Hash":  "24FD042E0731FE0F614F5CBFFECD402EF5AE2C1EAEFD6DAF91CE87BECFBE8598"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Sceipts\\MqttReceiver.cs.meta",
+        "Hash":  "064F1E684B2618B1BFC65D31B1EB4D3D273354B4BA72B7D3DC90B2805F77F17F"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Scenes\\MainScene.unity",
+        "Hash":  "72BD391839ADDF7AEF9749B1ABB8C0320FA0803F77088D095F2D685B0E23F528"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Scenes\\MainScene.unity.meta",
+        "Hash":  "06A69EFFAD6078F1DDBA893AFC1523AFD98133FDF97BEE20943403FC982BAD86"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Scenes\\SampleScene.unity",
+        "Hash":  "07FCE8B04804DDCCB3026DB5B43D8DC41BA138E49D50D36A5C24877081EACDCA"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Scenes\\SampleScene.unity.meta",
+        "Hash":  "B5815A6B12AFAF810577BC89041C4CE46516C7CD6609693F8DB616F8E5584D80"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\DefaultVolumeProfile.asset",
+        "Hash":  "3A6F825E8D07FE8B9F3B52E7D4E2DFA0E22C555B22335ADB19F0ECC66DFA38DD"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\DefaultVolumeProfile.asset.meta",
+        "Hash":  "EFBCB026CEE6B8E32FDF27018C06B0515296A6CCBB43969E792FEA270310700A"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\Mobile_Renderer.asset",
+        "Hash":  "B4EFBCFDF69ACB1E1E25E8AFFF9BA99009CFC47EB0B05A284648C5448E4D846F"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\Mobile_Renderer.asset.meta",
+        "Hash":  "A148EE2B4987B05B8FF7AE5F9BF84916184F77AEFDDC821DCEB551F5A69F8179"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\Mobile_RPAsset.asset",
+        "Hash":  "867614875F5AFC87B9712CEEC320D81A119FFA65AAED7FFC4AF9B00BA148B282"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\Mobile_RPAsset.asset.meta",
+        "Hash":  "53EA46647712C615FD1A3F2E0DDDFA8559EEEDC649E9A1DBF93FF913DE28544C"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\PC_Renderer.asset",
+        "Hash":  "3D0B01D8DED3327263B6690BE128A3DE58D17C514943AE42FE743A3E084A9C79"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\PC_Renderer.asset.meta",
+        "Hash":  "B5DF8DDB2708C6ED4C133A5FF9EE95A75CC20E4EE3ED6181366A61AEDBAF31EC"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\PC_RPAsset.asset",
+        "Hash":  "BCEF31006339D245D47D5E8AD208F9F34471618496D08E9F9D06E8D449C71D97"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\PC_RPAsset.asset.meta",
+        "Hash":  "BB469B9B6F318E9E9BED29C3B2E73E79371C04743C6F95DD6603941F1CD3E53E"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\SampleSceneProfile.asset",
+        "Hash":  "A8677D4BAC051D24CAA11CD622E39F968155EE277BFCE132274F1DE225692FE9"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\SampleSceneProfile.asset.meta",
+        "Hash":  "2E23ABC214069F0ADBF2B2207F1DB54BE7876629EC2A3681D0F4AA5B61622EF0"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\UniversalRenderPipelineGlobalSettings.asset",
+        "Hash":  "B2D5273CA051B3320403061999A76A8B3287FEBC29854D34FA3534EDB873FF1D"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\Settings\\UniversalRenderPipelineGlobalSettings.asset.meta",
+        "Hash":  "F61661D8BC8DBE531DAF09F6211EF978C7BA145C9207C8E76524396AE0722D7C"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Fonts.meta",
+        "Hash":  "11E80153FA39B86EFADB8917ECDE12A0402FE0729F2C88F6F8D1999F3FB04748"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources.meta",
+        "Hash":  "167448559DB07C9857B206A0F5A0AEDCD6A6DAD900D618B35B0702D636573805"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders.meta",
+        "Hash":  "C109EB7E331AFFEDB377F7051DF3D4881F8529B65F9593234585713E6E94ED30"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Sprites.meta",
+        "Hash":  "41E002B97BA2235689FBA502D1EE4419F50EA0095CD3632CDC50BC90CA8A94DE"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Fonts\\LiberationSans - OFL.txt",
+        "Hash":  "37F8552E9A874EC10710DC0EDE6A9ADF168E6609FBD02A507F35629373B85A48"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Fonts\\LiberationSans - OFL.txt.meta",
+        "Hash":  "5DBEC32C014C17D94674AF5F1494D49B42BA00EDD50397F895F088C868CCBF86"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Fonts\\LiberationSans.ttf",
+        "Hash":  "E5B0AF421EA2BFBC1AC8D251D647268087AE82786234C57F757D1F0B90FA8B49"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Fonts\\LiberationSans.ttf.meta",
+        "Hash":  "E2E35A015703584FB119355FA02631764D111C3E112D32519801D46BD697B596"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Fonts \u0026 Materials.meta",
+        "Hash":  "8917470A9265BEB1EF55A28C6A3718EB12EC8004554499998CC345056247995F"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\LineBreaking Following Characters.txt",
+        "Hash":  "3A73E5FFE2510756DD3C2E982FDC1218B4BE82C6E21ABDE88070D6860E1BC8E6"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\LineBreaking Following Characters.txt.meta",
+        "Hash":  "D5A86D8B7DB6AA3CA6F4A63750EB94E0C42A64909B47D8C6C6F2565845534490"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\LineBreaking Leading Characters.txt",
+        "Hash":  "62D3F4D5F64AAF885692D2D13A8313F6918E6E4C5AEB3990A43F614652BFD89C"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\LineBreaking Leading Characters.txt.meta",
+        "Hash":  "6A925814D5E251A0CED6DE210DB2BACF2DE29B4F0DC2991E85C908632E9565E4"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Sprite Assets.meta",
+        "Hash":  "5605AFFAC803B81F876F35577F075C9B7E5EA73CF812FDFCC74277BF0F40140E"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Style Sheets.meta",
+        "Hash":  "1FDF0423552F46284FB97894F36ADCD34D32E595AAF5C7CF1CE38A2349FAAF89"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\TMP Settings.asset",
+        "Hash":  "7BE438062CDC296835A1258B68BCBEB8E9FDC4B01EA27C05A24A1074260F7424"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\TMP Settings.asset.meta",
+        "Hash":  "A65193B095EC3606789A3191751A837704CF52D4F461993AE7903024C6D43F45"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Fonts \u0026 Materials\\LiberationSans SDF - Drop Shadow.mat",
+        "Hash":  "B6B65C34E4907DD3006C2217FC8A4CEF81B6DA24DF0A3DE8E2288199EB6C5A9D"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Fonts \u0026 Materials\\LiberationSans SDF - Drop Shadow.mat.meta",
+        "Hash":  "EF2EEE63B288D47823DA38109E3E8C879F4717A82DC662AC2D5E2460DACDE698"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Fonts \u0026 Materials\\LiberationSans SDF - Fallback.asset",
+        "Hash":  "E2D77876F2B90D98BA2424F6FC32B1403EA701DE8FD24A8FE8E571ECC3CDC10A"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Fonts \u0026 Materials\\LiberationSans SDF - Fallback.asset.meta",
+        "Hash":  "D6D86504040CF6E736767FDA9BDEF494AFB06D5304384243E2DD703EBA3A4A3D"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Fonts \u0026 Materials\\LiberationSans SDF - Outline.mat",
+        "Hash":  "25874340976D40E9F9E8ABF731B7F32E5A478541DEAD9288140BD60C7A3287D9"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Fonts \u0026 Materials\\LiberationSans SDF - Outline.mat.meta",
+        "Hash":  "A8CF0EE9888A163E892368B4660B9C62A7375E7F8AFDB8EE02E5C91CA1CDB355"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Fonts \u0026 Materials\\LiberationSans SDF.asset",
+        "Hash":  "C3FF50E3133D989180B187748FFC67903F1FEDE099A5B85B4FCBD8CB6E8BE958"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Fonts \u0026 Materials\\LiberationSans SDF.asset.meta",
+        "Hash":  "37233890984555987CB585551BC885069F2849A9B0D1C2191AF073B9376AA10F"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Sprite Assets\\EmojiOne.asset",
+        "Hash":  "155FFF99F467BAA93DD2D0886DF466BD242CD5E3C8C60C9D43E9CDAD269F7F54"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Sprite Assets\\EmojiOne.asset.meta",
+        "Hash":  "097525B164260B0FB34B4E0C73B3187C693F4DFE2991F475B5B416DBF07DFBBC"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Style Sheets\\Default Style Sheet.asset",
+        "Hash":  "93E073CDB91B7E3D2FA31E2DD13626D7B9D2F327904BA8C3C2B97A3EECFBABAC"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Resources\\Style Sheets\\Default Style Sheet.asset.meta",
+        "Hash":  "B832663CA09EC7AF8C8E816FD91A718B2AF6C21AB4F126FA818871AD53BCE763"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\SDFFunctions.hlsl",
+        "Hash":  "88CF0F62E4000B71750C059D0886B19504CD1CF10F39BB61DDC11B77A882D417"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\SDFFunctions.hlsl.meta",
+        "Hash":  "E1D0C5347B3C55930759F5BC0985E11611A4B2FF22EEF24523EB108687BD1642"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMPro.cginc",
+        "Hash":  "14EDB7D7B88CAF2B82CAE68200ABE895E5B5B3474C3FFFBF0E9B4B09A4E2467E"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMPro.cginc.meta",
+        "Hash":  "A9CF9D5431B809E36B8FFFF4377B5EBDA7D386A36D48838CD134BC09F3CAEC6C"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMPro_Mobile.cginc",
+        "Hash":  "D9D43DDD9810476162F21B42477D9CE2CDC4E6CC7571D354C3253AAFC6673EAD"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMPro_Mobile.cginc.meta",
+        "Hash":  "2E16FA15EF884A60A402D8B696F8B09E5315CBB468BA223D256030C7FE2B0667"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMPro_Properties.cginc",
+        "Hash":  "66DB1F03E8D7A413EBA79BCB6602FDB2DE710B586F34A6F2584ED6F68F028E90"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMPro_Properties.cginc.meta",
+        "Hash":  "EDACE33591894D86D9A4144466FB3606E538D3341030FE22F908551755120EA5"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMPro_Surface.cginc",
+        "Hash":  "244B442520282A66363D121C8D2AEEB30BB1E72CBBADBF41CE68D9100322ADE5"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMPro_Surface.cginc.meta",
+        "Hash":  "247746F3A4E39DD24D1AD99E4FAE03AE8976586307948B2846529A876DCB0A63"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_Bitmap-Custom-Atlas.shader",
+        "Hash":  "42892A52F22BDDE6D482CF2DA5F35E4B813063FC6FE42189EEE5562080079494"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_Bitmap-Custom-Atlas.shader.meta",
+        "Hash":  "91BE1D5618A7DA33C878E20CF2BE3E13B897D4976C70BDE0CDA7A67DBD502CD2"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_Bitmap-Mobile.shader",
+        "Hash":  "B50AFC7EDC8A710F8B4159149B2391E7238B5E4076CC0EA2119090ED29E13B4A"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_Bitmap-Mobile.shader.meta",
+        "Hash":  "7430F3E97AE1B46F34E1CA75508705BB7B944307C41DC568EA728011F327086D"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_Bitmap.shader",
+        "Hash":  "1D32F34C71276C1321AA0540A2410E15808743A38B2026923045A4DEC4A79B58"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_Bitmap.shader.meta",
+        "Hash":  "3D462E6F8BA57F45DC5E6000020DB066C36ED5A1A24F74F749727812373C2325"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF Overlay.shader",
+        "Hash":  "A0D318756CBA0F95A7052C387E629D0ADD3E9A4125C8333F1D1ED591AF5F17CB"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF Overlay.shader.meta",
+        "Hash":  "FB8FC84B612E19C169CDF3596195B416E68D227A8987A0EAA90D8C137FB69797"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF SSD.shader",
+        "Hash":  "2A991951B00B0C052363A1025F655450054325437B3D13C2623A987C8EC77C30"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF SSD.shader.meta",
+        "Hash":  "BEA74D576F181A8BB04B8CF02EEDD0136540325ECB2824928A3AA52C75ADCB13"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-HDRP LIT.shadergraph",
+        "Hash":  "BF68062F68B38B588ABD1C354F64E905F824D9A2C47F92EBDD70A32989EB2097"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-HDRP LIT.shadergraph.meta",
+        "Hash":  "D1B70558E8B974D918E13C010DB6D375FEF815BA530BC2421AB031AA3A784EE8"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-HDRP UNLIT.shadergraph",
+        "Hash":  "8A969C2D775079CCE4E1C45D5EB6D3964B27D44DC884178363050C74FD5E9742"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-HDRP UNLIT.shadergraph.meta",
+        "Hash":  "8CD498CE8F6ED2E7C0560D605EB912455CD6FDAF09A4D545D9743F63B3426BD0"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Mobile Masking.shader",
+        "Hash":  "41CFF58473557BF760D03513A8C098F43A24E4EEB4C8CCD7D828C045A338A9ED"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Mobile Masking.shader.meta",
+        "Hash":  "3744D078F9A8B6D3C5D9BCA51E43F9223544FCAFAF9396E121F49EA84A0609D3"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Mobile Overlay.shader",
+        "Hash":  "FB286386D0592CE6D63EB736F180B4B0F638EC538B0855AA54767A438EBD1173"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Mobile Overlay.shader.meta",
+        "Hash":  "1EECA1536C7506F79D4D877B866A5FB88DB8F402634E091B6D78AA9D21C9D18B"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Mobile SSD.shader",
+        "Hash":  "8B30C140F6AF9134392FE6ECF4C0676DB73F873489AC52ADFB47BBD288CB51B8"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Mobile SSD.shader.meta",
+        "Hash":  "E3412891B9306B017E60CBA4AE4F6D258EE8B161D986DCDE9CEFB3D60345514D"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Mobile-2-Pass.shader",
+        "Hash":  "4BC2DB64BEFBD0E37E23539F21096AD2FCD9D61B36D2174D208A7D831A0883F7"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Mobile-2-Pass.shader.meta",
+        "Hash":  "65ECBCE6F1621F2D7DDC5E6004DDA5E55E1F58EC6E01178F3691E1E81E01DE55"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Mobile.shader",
+        "Hash":  "44C39AABC7E88E7E1FEFFC1880DF754F4ADF86B62E9512AA89E9D2D65171AFF4"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Mobile.shader.meta",
+        "Hash":  "F2112F50C72762D4E6731391495EA11F76975D677B698E9BCFDD38275EA18F9D"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Surface-Mobile.shader",
+        "Hash":  "F9FAE5906DD37D89298338953294459975DE58A5421E68DD9E82A79794B95509"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Surface-Mobile.shader.meta",
+        "Hash":  "95AA060F371EE503A22C0A0B018E029C0328BD82B9317FEAA784432B0A787343"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Surface.shader",
+        "Hash":  "5DADB68B56429547918B392626E9AF8FD5173936D20BB43CFCA58DFA00947257"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-Surface.shader.meta",
+        "Hash":  "42439F5AC7491998F562E8EDE73D64C3512953EB99FB1B49E833F5D9999A7660"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-URP Lit.shadergraph",
+        "Hash":  "E0148CE8E5904232A4E711376A45B7AF2A007FB9690C5A69C1CB4952A696CDBF"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-URP Lit.shadergraph.meta",
+        "Hash":  "4C36ABF5F2611C9D2CB04E7DA8C30E42077503A17CB218020E171B6D3FF664F7"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-URP Unlit.shadergraph",
+        "Hash":  "DC15B6819AD87A4B34ED888AE2C274624EFC0ADA902D1A9E7752D87922414DCC"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF-URP Unlit.shadergraph.meta",
+        "Hash":  "F1EF815E2672FD770F47EE424C64F7ECDBDC642B7475828C29DB032586AA10B6"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF.shader",
+        "Hash":  "10EFE6D4728474A09970B857FAF37913793E168DC13DBD4D7316B54B37615D97"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_SDF.shader.meta",
+        "Hash":  "0897FB06D170043FFFA2D28783B347BBAEE87A3F09F08374CA44B2C3848697D6"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_Sprite.shader",
+        "Hash":  "AF669BB9AE136C8099F8E0A94A6933FD2F1E1FB0A6842129939A319FAB4B8DBB"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Shaders\\TMP_Sprite.shader.meta",
+        "Hash":  "9609584C5249687F3765F0018A93DFD6445C7E35D5AEE4E87556F111C8852819"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Sprites\\EmojiOne Attribution.txt",
+        "Hash":  "4B65F8960E4F4C5C8B35FD139E369265E9BB45667FC16461B2BA01188D464D93"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Sprites\\EmojiOne Attribution.txt.meta",
+        "Hash":  "9FFFC8AC513116B8AC394D86D81CA9AC4EC52EE92C63C114D355808384EA16FC"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Sprites\\EmojiOne.json",
+        "Hash":  "B85C4B3001B6BA82D175F4CD5DAB83DA467BBC2527D3D447B66919D2D20C4FAF"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Sprites\\EmojiOne.json.meta",
+        "Hash":  "AC2C551B5BC7F7D636D54DED634DFC3493E249567283B2EFC06D1299F9360061"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Sprites\\EmojiOne.png",
+        "Hash":  "A87B965A701DE3DC31D7401E542B1FC946587F912C51D7A26E46ADE9F098BD1A"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TextMesh Pro\\Sprites\\EmojiOne.png.meta",
+        "Hash":  "EB63C0321658B980B138CE5F675D44689B8C7144DF43976931E132E7706D1E1A"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Icons.meta",
+        "Hash":  "546E7D7AF6B4D5E17D284C8F1188D05472E681911B8359905EE9B9E20769A106"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Layout.wlt",
+        "Hash":  "30D232879CA5C0C7377F245C9601FEAF77053E5D70C222419EF25782E3272D2C"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Layout.wlt.meta",
+        "Hash":  "B8745A251DF078FFA75DBAAC0C4C6DEBECB61AB306B5B119A490CE6C635A11D8"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Scripts.meta",
+        "Hash":  "930D0C8276CEA1559A3E315F8500EA6CA8B58D980EEE3B44AAA1D461742C47E0"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Icons\\URP.png",
+        "Hash":  "1D17A9FF3537859ABE2C008603D29D90CF43191AE77AA386167CC65E53BA03D9"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Icons\\URP.png.meta",
+        "Hash":  "B330F1FCFC4E6CECCC95FC34A38434141603469B135633E1C4E8A03C19F9FDBC"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Scripts\\Editor.meta",
+        "Hash":  "7036BDBC8AF05799B5FD508484343B35C28A68B390198DA4673D34357D7D667F"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Scripts\\Readme.cs",
+        "Hash":  "BAA133F5BAAE44C1217E10C64061F8FB7D56878477339D746470502165D35019"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Scripts\\Readme.cs.meta",
+        "Hash":  "80A3DF9969FAB6E656583EE9BBCA884D0507E2B7DE3417F6EA3118FBA901CD60"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Scripts\\Editor\\ReadmeEditor.cs",
+        "Hash":  "B1B509BE41113E31B8EE3C30CA0A00AAF006FDCAE69AAC749899EED2C4CC4A7D"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Assets\\TutorialInfo\\Scripts\\Editor\\ReadmeEditor.cs.meta",
+        "Hash":  "F59080B424C16FA13EDD105BF006FDBAD98C11FCE0C921043E63C8877F144CD9"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Packages\\manifest.json",
+        "Hash":  "F4064824C0F3A3C891843DB8EF6B54540CCB8B10D7853B3E14028862B8034706"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\Packages\\packages-lock.json",
+        "Hash":  "1CE7ED460526CC4CE90CBEA5AE53AC3B7E1AAB12DDCD701F256ACA8E232AE7E2"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\AudioManager.asset",
+        "Hash":  "AEEDEB3243F07B61DBBE854AA08B5EF6F0B5274DD9852AD9F6129DDE3E105A31"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\ClusterInputManager.asset",
+        "Hash":  "40E65DD214BF254955D2C8829CA8CE2130FD3510485560CE012E9A1DDD93E623"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\DynamicsManager.asset",
+        "Hash":  "B7C9A9DC08B98990109D4346F68745E15E238DE400F96C583E53E1C83C743A78"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\EditorBuildSettings.asset",
+        "Hash":  "348BA1ECA4B0698957F264F877F76227B78583ACD3138FD5FC85BE92F158E261"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\EditorSettings.asset",
+        "Hash":  "1EF9414984AE135D74E2D05DFBEB10A04CA7F8434B867C2B2053F46B78A365A6"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\GraphicsSettings.asset",
+        "Hash":  "9C1BB28A2AAC0FEE9D3CFD844F6F345FE573F18D35A5C9FD3048B9E9A066C4DF"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\InputManager.asset",
+        "Hash":  "7A1BB836A1008D26D0860D143E9D9DF7CA41731D30A72901B518063819C62DF2"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\MemorySettings.asset",
+        "Hash":  "1E8379A461B10AE09F3F696911088C16875D63E87ED5F2D95DF9E1892703F9FD"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\MultiplayerManager.asset",
+        "Hash":  "ABA89FD1A1DDAD182727AD82727E536D27372E90328A8196DA2A4560398983DD"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\NavMeshAreas.asset",
+        "Hash":  "80106CFA7E6181A1928B142C075F3E510D527441E3D79BC83590E4AC91E7CD66"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\PackageManagerSettings.asset",
+        "Hash":  "A7DABBA589ABE7FC2B45BD3D3FBA3FE9BE97043492703F716DA2D9131C13A807"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\Physics2DSettings.asset",
+        "Hash":  "E3CBDBF0BE15244B7B67D2F07BDB8E8981911C11A8C7FE8035F5261272FEC658"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\PresetManager.asset",
+        "Hash":  "29C125923FE6E29F90190D4FCE1C82D660E7051546E2C9D02908D18C9CF2436C"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\ProjectSettings.asset",
+        "Hash":  "F289F729E251B75329AD25C51DDD0007C48EA19E2266588D597C63414654FE03"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\ProjectVersion.txt",
+        "Hash":  "38810C290E73B6A48FD1AEDBDAA12506ADC2A876682FD212A18169C1F8C488FE"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\QualitySettings.asset",
+        "Hash":  "6814D6CC3EB850DD7D2A069A8B17BA9F7591DEBA8B1758A855978BD9C8627643"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\SceneTemplateSettings.json",
+        "Hash":  "BB9098B3BFCDE78D93E264B96F7B77B5430E64E8C57A7AAD7F5A5D9C3945E16A"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\ShaderGraphSettings.asset",
+        "Hash":  "CDBA1E5D65BCF6E3269D76ED3E60B6C21F98322002996642C9D74F1EB89F6B91"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\TagManager.asset",
+        "Hash":  "23FC56B484AA3D7EDF5914CD3591F7A823CCEF5E3F3496F8A51F30388EAD63DC"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\TimeManager.asset",
+        "Hash":  "1A83E54ADBBDA7C9F4851103A0C6AB7F6448A3343D4EA5B7620452FA08416ECD"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\UnityConnectSettings.asset",
+        "Hash":  "D6034ACBEF6C9E3179866486C31EAB81FCBE5E7ED350CE71E0FA2B1449B77109"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\URPProjectSettings.asset",
+        "Hash":  "596D5C8BF4F957B03684C949BEBC252AE1918F25415A1147A00684C4B086EFDA"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\VersionControlSettings.asset",
+        "Hash":  "E7BDA45BF7A394745FEE1316E6C71FA676004D591AD1F3AA247FD3E4CEB86071"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\VFXManager.asset",
+        "Hash":  "F066C6483919961332415EE64204F74FE52F38C02E82892EB02B7A5B2E381F0E"
+    },
+    {
+        "Path":  "unity\\MQTT_BeamPro\\BeamPro\\ProjectSettings\\XRSettings.asset",
+        "Hash":  "EDD2BEB4A2E388312B4B7DA241AA51070434005D82C59363F1237DD2E567585F"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Jetson\\mqtt_bridge.py",
+        "Hash":  "B17E6C7F0582694CE90CFFD1E318F635A4D4DD9C65C09B910503CFEA205C1D37"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Jetson\\mqtt_test_publisher.py",
+        "Hash":  "E09CA0ABC6036E6917070F8374DA6140A91AD4F6680992F37639FEE9BDCC7F41"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Mosquitto\\xreal-local.conf",
+        "Hash":  "9EA50E1ECE35EBE6AEF873F2E5261971706CB5B80843A181EFF09EC6E44ECCA6"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Unity\\Assets\\Scripts\\SirenMqttSubscriber.cs",
+        "Hash":  "0DE575D6B57DB565CC5AF9300AAA621BEA0FAB7E37F3D6FE37D8C3CC8E2A46E7"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Web_AR_Mockup\\app.js",
+        "Hash":  "DD2E6EC9013D2A9C0A1C59839A3851BD99E34702C518833598FE58ED8C95E140"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Web_AR_Mockup\\index.html",
+        "Hash":  "9893FDDBDDAFA8333A62E76C67038D1ABD3D0CF1D900244B271DBD8777982816"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Web_AR_Mockup\\README.md",
+        "Hash":  "02A797AA2D15318215B0106A74F41041F1BC9091024DC6C2F209DCF834440369"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Web_AR_Mockup\\style.css",
+        "Hash":  "73506262A6E9AC8FA2384D736E95B526633C57C7C49711C6A07A30E69BF0A781"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Web_AR_Mockup\\verify.cjs",
+        "Hash":  "F4B5840560242CDDEF3DCE6A7CEB8894F233763477EECDA208BC199217F1F5A0"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Web_AR_Mockup\\vendor\\THREE-LICENSE.txt",
+        "Hash":  "852E0E8699169BF9F6FDC6BDA3E682D078DCBC738B5D33E74DF594721BFF271D"
+    },
+    {
+        "Path":  "mqtt_xreal_system\\Web_AR_Mockup\\vendor\\three.module.js",
+        "Hash":  "76DEA8151BC9352AEF3528B4262E249B2604F62543828328DB978D060D61A495"
+    }
+]

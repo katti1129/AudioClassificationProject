@@ -1,0 +1,3 @@
+# Parent .gitignore ignores every docs/ directory; keep this system's sources.
+!docs/
+!docs/**
