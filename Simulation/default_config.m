@@ -49,6 +49,7 @@ config.reflection.obstacleFacesEnabled = true;
 % Seeded axis-aligned boxes resting on z=0.
 config.obstacle.enabled = true;
 config.obstacle.count = 24;
+%ランダム障害物生成に使用する乱数シード値
 config.obstacle.seed = 1;
 config.obstacle.boundsMinM = [-45.0, -5.0, 0.0];
 config.obstacle.boundsMaxM = [ 45.0, 18.0, 0.0];
