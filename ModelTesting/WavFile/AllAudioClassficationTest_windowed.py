@@ -8,7 +8,7 @@
 出力シート:
     Summary       : ファイル単位の評価結果
     WindowResults : 各時間窓の推論結果
-    ConditionMean : CPA・速度・反射係数別の平均結果
+    ConditionMean : ファイル名に記録された全条件の組み合わせ別の平均結果
     Errors        : 読み込みや推論に失敗したファイル
 """
 
@@ -174,44 +174,54 @@ def make_window_batch(
     return input_data, time_ranges
 
 
+# ファイル名の独立した「_タグ値」から条件を取得する。
+# Vは従来の救急車速度、Rは百分率表記（R080=0.8）を維持する。
+CONDITION_TAGS = {
+    "CPA": ("CPA_m", "m", 1.0),
+    "V": ("Velocity_kmh", "", 1.0),
+    "PV": ("PedestrianVelocity_kmh", "", 1.0),
+    "R": ("Reflection", "", 0.01),
+    "OBS": ("ObstacleEnabled", "", 1.0),
+    "N": ("ObstacleCount", "", 1.0),
+    "SEED": ("ObstacleSeed", "", 1.0),
+    "DIF": ("DiffractionEnabled", "", 1.0),
+    "REF": ("ReflectionEnabled", "", 1.0),
+    "OREF": ("ObstacleReflectionEnabled", "", 1.0),
+    "SA": ("SourceAccelerationX_mps2", "", 1.0),
+    "PA": ("PedestrianAccelerationX_mps2", "", 1.0),
+    "SPL": ("ReferenceSPL_dB", "", 1.0),
+    "SNR": ("SNR_dB", "", 1.0),
+}
+CONDITION_COLUMNS = [spec[0] for spec in CONDITION_TAGS.values()]
+
+
 def parse_conditions(filename: str) -> dict[str, float | None]:
+    """拡張条件タグを読む。省略した条件は不明(None)として保持する。
+
+    例: ambulance_CPA20m_V060_PV-4_R080_OBS1_N24_SEED1_DIF1_REF1.wav
+    符号・小数に対応。タグ間はアンダースコアで区切る。
     """
-    ファイル名からCPA、速度、反射係数を取得する。
-
-    例:
-        ambulance_CPA20m_V060_R080.wav
-
-    戻り値:
-        CPA_m           = 20
-        Velocity_kmh    = 60
-        Reflection      = 0.8
-    """
-
-    stem = Path(filename).stem
-
-    cpa_match = re.search(r"CPA(\d+(?:\.\d+)?)m", stem, re.IGNORECASE)
-    velocity_match = re.search(r"_V(\d+(?:\.\d+)?)", stem, re.IGNORECASE)
-    reflection_match = re.search(r"_R(\d+)", stem, re.IGNORECASE)
-
-    cpa = float(cpa_match.group(1)) if cpa_match else None
-    velocity = (
-        float(velocity_match.group(1))
-        if velocity_match
-        else None
-    )
-
-    reflection = None
-    if reflection_match:
-        reflection_number = int(reflection_match.group(1))
-
-        # R080 -> 0.8、R020 -> 0.2
-        reflection = reflection_number / 100.0
-
-    return {
-        "CPA_m": cpa,
-        "Velocity_kmh": velocity,
-        "Reflection": reflection,
-    }
+    tokens = Path(filename).stem.split("_")
+    conditions = dict.fromkeys(CONDITION_COLUMNS)
+    number = r"[+-]?(?:\d+(?:\.\d+)?|\.\d+)"
+    flags = {"OBS", "DIF", "REF", "OREF"}
+    for tag, (column, suffix, scale) in CONDITION_TAGS.items():
+        matches = [re.fullmatch(tag + "(" + number + ")" + suffix,
+                                token, re.IGNORECASE) for token in tokens]
+        values = [float(match.group(1)) for match in matches if match]
+        if len(values) > 1:
+            raise ValueError(f"条件タグが重複しています: {tag}")
+        if not values:
+            continue
+        value = values[0]
+        if tag in flags and value not in (0, 1):
+            raise ValueError(f"{tag}は0または1で指定してください")
+        if tag in {"N", "SEED"} and (value < 0 or not value.is_integer()):
+            raise ValueError(f"{tag}は0以上の整数で指定してください")
+        if tag == "CPA" and value < 0:
+            raise ValueError("CPAは0以上で指定してください")
+        conditions[column] = value * scale
+    return conditions
 
 
 def get_experiment_type(path: Path) -> str:
@@ -336,9 +346,7 @@ def evaluate_file(
         "ExperimentType": experiment_type,
         "FileName": audio_path.name,
         "RelativePath": str(audio_path.relative_to(TARGET_DIR)),
-        "CPA_m": conditions["CPA_m"],
-        "Velocity_kmh": conditions["Velocity_kmh"],
-        "Reflection": conditions["Reflection"],
+        **conditions,
         "AudioDuration_s": len(y) / sr,
         "WindowDuration_s": WINDOW_DURATION,
         "HopDuration_s": HOP_DURATION,
@@ -390,9 +398,7 @@ def evaluate_file(
             {
                 "ExperimentType": experiment_type,
                 "FileName": audio_path.name,
-                "CPA_m": conditions["CPA_m"],
-                "Velocity_kmh": conditions["Velocity_kmh"],
-                "Reflection": conditions["Reflection"],
+                **conditions,
                 "WindowNumber": window_number,
                 "StartTime_s": start_time,
                 "EndTime_s": end_time,
@@ -417,13 +423,8 @@ def make_condition_summary(
 
     result_frames: list[pd.DataFrame] = []
 
-    condition_settings = [
-        ("CPA", "CPA_m"),
-        ("Velocity", "Velocity_kmh"),
-        ("Reflection", "Reflection"),
-    ]
-
-    for experiment_type, condition_column in condition_settings:
+    # 全条件の組み合わせごとに集計し、異なる設定を混ぜない。
+    for experiment_type in summary_df["ExperimentType"].unique():
         target = summary_df[
             summary_df["ExperimentType"] == experiment_type
         ].copy()
@@ -432,7 +433,7 @@ def make_condition_summary(
             continue
 
         grouped = (
-            target.groupby(condition_column, dropna=False)
+            target.groupby(CONDITION_COLUMNS, dropna=False)
             .agg(
                 FileCount=("FileName", "count"),
                 TotalTP=("TP", "sum"),
@@ -466,9 +467,6 @@ def make_condition_summary(
         )
 
         grouped.insert(0, "ExperimentType", experiment_type)
-        grouped = grouped.rename(
-            columns={condition_column: "ConditionValue"}
-        )
 
         result_frames.append(grouped)
 
