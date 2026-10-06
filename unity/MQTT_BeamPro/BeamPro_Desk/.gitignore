@@ -1,0 +1,11 @@
+Library/
+Temp/
+Logs/
+obj/
+UserSettings/
+Builds/
+Artifacts/
+.utmp/
+*.apk
+*.aab
+!Packages/com.xreal.xr/**

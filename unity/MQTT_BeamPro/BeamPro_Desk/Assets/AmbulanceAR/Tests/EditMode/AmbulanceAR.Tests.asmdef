@@ -1,0 +1,8 @@
+{
+  "name": "AmbulanceAR.Tests",
+  "references": ["AmbulanceAR.Runtime", "UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.TextMeshPro"],
+  "overrideReferences": true,
+  "precompiledReferences": ["nunit.framework.dll", "MQTTnet.dll", "Newtonsoft.Json.dll"],
+  "includePlatforms": ["Editor"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"]
+}

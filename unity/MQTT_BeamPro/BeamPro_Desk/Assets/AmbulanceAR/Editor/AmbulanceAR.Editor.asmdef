@@ -1,0 +1,5 @@
+{
+  "name": "AmbulanceAR.Editor",
+  "references": ["AmbulanceAR.Runtime", "Unity.TextMeshPro", "Unity.ugui", "Unity.InputSystem", "Unity.XR.CoreUtils", "Unity.XR.Management", "Unity.XR.Management.Editor", "Unity.XR.XREAL", "Unity.RenderPipelines.Universal.Runtime"],
+  "includePlatforms": ["Editor"]
+}
