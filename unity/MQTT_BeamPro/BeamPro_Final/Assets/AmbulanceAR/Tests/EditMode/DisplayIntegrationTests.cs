@@ -29,11 +29,12 @@ namespace AmbulanceAR.Tests
                 system.arrow = arrow; system.alert = alert; system.editorSimulation = true;
                 system.simulatedWorldBearing = 180;
                 void Tick() => system.ProcessFrame();
-                Tick(); Assert.True(arrow.arrowRenderer.enabled); Assert.True(alert.warningRoot.activeSelf);
-                Vector3 original = arrow.transform.position;
+                Tick(); Assert.False(arrow.arrowRenderer.enabled); Assert.True(alert.warningRoot.activeSelf);
+                Vector3 original = system.direction.WorldDirection;
                 double wait = ReceiveClock.Now + .12; while (ReceiveClock.Now < wait) yield return null;
                 system.simulatedHeadYaw = 180; Tick();
-                Assert.That(Vector3.Distance(original, arrow.transform.position), Is.LessThan(.001));
+                Assert.That(Vector3.Distance(original, system.direction.WorldDirection), Is.LessThan(.001));
+                Assert.True(arrow.arrowRenderer.enabled);
                 Assert.Greater(Vector3.Dot(head.transform.forward, system.direction.WorldDirection), .99);
                 wait = ReceiveClock.Now + .12; while (ReceiveClock.Now < wait) yield return null;
                 system.simulateUnknown = true; Tick(); Assert.False(arrow.arrowRenderer.enabled); Assert.True(alert.warningRoot.activeSelf);
@@ -46,6 +47,14 @@ namespace AmbulanceAR.Tests
                 wait = ReceiveClock.Now + 1.6; while (ReceiveClock.Now < wait) yield return null;
                 Tick(); Assert.False(arrow.arrowRenderer.enabled); Assert.False(alert.warningRoot.activeSelf);
                 Assert.That(alert.connectionText.text, Does.Contain("STALE"));
+                system.pauseSimulatedPackets = false;
+                Tick(); Assert.True(arrow.arrowRenderer.enabled);
+                // Switch to a disconnected real subscriber: stale simulation must not survive.
+                system.subscriber.brokerHost = "127.0.0.1"; system.subscriber.brokerPort = 1;
+                system.editorSimulation = false; Tick();
+                Assert.False(arrow.arrowRenderer.enabled);
+                Assert.False(alert.warningRoot.activeSelf);
+                Assert.AreEqual(AcousticStatus.Unavailable, alert.DisplayedStatus);
             }
             finally { Object.DestroyImmediate(root); }
         }

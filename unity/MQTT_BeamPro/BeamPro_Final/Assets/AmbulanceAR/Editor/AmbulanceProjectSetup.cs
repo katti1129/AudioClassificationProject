@@ -141,6 +141,7 @@ namespace AmbulanceAR.Editor
             alert.connectionText = MakeText("Connection", hudObject.transform, new Vector2(900, 45), new Vector2(0, -96), 20);
             alert.connectionText.color = new Color(.65f, .75f, .8f);
             warning.SetActive(false);
+            AudioStatusSceneUpgrade.ConfigureHud(alert);
             PrefabUtility.SaveAsPrefabAsset(hudObject, Root + "/Prefabs/AmbulanceHUD.prefab");
 
             var systemObject = new GameObject("Ambulance System");

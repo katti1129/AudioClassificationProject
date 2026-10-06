@@ -23,18 +23,31 @@ namespace AmbulanceAR.Tests
             Assert.IsNull(system.arrow.transform.parent);
             Assert.False(system.alert.showDebugDetails);
             Assert.That(system.alert.transform.localPosition.y, Is.GreaterThan(0));
+            Assert.NotNull(system.alert.guidanceText.transform.Find("Direction Icon").GetComponent<CanvasRenderer>());
 
             system.simulatedHeadYaw = 90;
             yield return new WaitForSecondsRealtime(.25f);
             Assert.Greater(Vector3.Dot(system.direction.WorldDirection, Vector3.forward), .999f);
+            Assert.False(system.arrow.arrowRenderer.enabled);
+            Assert.That(system.alert.guidanceText.text, Does.Contain("TURN LEFT"));
+            system.simulatedHeadYaw = 0;
+            yield return new WaitForSecondsRealtime(.2f);
+            Assert.False(system.alert.guidanceText.gameObject.activeSelf);
+            Assert.True(system.arrow.arrowRenderer.enabled);
             system.simulateUnknown = true;
             yield return new WaitForSecondsRealtime(.2f);
             Assert.False(system.arrow.arrowRenderer.enabled);
             Assert.True(system.alert.warningRoot.activeInHierarchy);
             Assert.That(system.alert.warningText.text, Does.Contain("UNKNOWN"));
             system.simulatedDetected = false;
-            yield return new WaitForSecondsRealtime(.2f);
+            yield return new WaitForSecondsRealtime(1.0f);
             Assert.False(system.alert.warningRoot.activeInHierarchy);
+            Assert.False(system.arrow.arrowRenderer.enabled);
+            Assert.AreEqual("SOUND DETECTED", system.alert.statusText.text);
+            system.simulateSilence = true;
+            yield return new WaitForSecondsRealtime(1.0f);
+            Assert.AreEqual("SURROUNDINGS QUIET", system.alert.statusText.text);
+            Assert.False(system.arrow.arrowRenderer.enabled);
             system.simulatedDetected = true;
             system.simulateUnknown = false;
             yield return new WaitForSecondsRealtime(.2f);
@@ -43,6 +56,7 @@ namespace AmbulanceAR.Tests
             yield return new WaitForSecondsRealtime(1.6f);
             Assert.False(system.arrow.arrowRenderer.enabled);
             Assert.False(system.alert.warningRoot.activeInHierarchy);
+            Assert.AreEqual("AUDIO STATUS UNAVAILABLE", system.alert.statusText.text);
             yield return new ExitPlayMode();
         }
 

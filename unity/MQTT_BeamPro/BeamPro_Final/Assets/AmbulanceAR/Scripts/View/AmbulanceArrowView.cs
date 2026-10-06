@@ -5,10 +5,16 @@ namespace AmbulanceAR
 {
     public sealed class AmbulanceArrowView : MonoBehaviour
     {
-        [Min(.3f)] public float radius = 2.5f;
-        public float heightOffset = -.55f;
-        [Range(1, 1.2f)] public float pulseScale = 1.1f;
-        [Min(.1f)] public float pulseSeconds = 4;
+        [Min(.3f)] public float radius = 1.8f;
+        public float heightOffset = -.25f;
+        [Range(0, 60)] public float tiltDegrees = 35;
+        [Min(.1f)] public float baseScale = 1;
+        [Range(1, 2)] public float pulseScale = 1.2f;
+        [Min(.1f)] public float pulseSeconds = 1;
+        [Min(0)] public float emissionIntensity = 1.5f;
+        public Color lowConfidenceColor = new Color32(180, 193, 207, 255);
+        public Color mediumConfidenceColor = new Color32(255, 196, 79, 255);
+        public Color highConfidenceColor = new Color32(255, 85, 79, 255);
         public MeshRenderer arrowRenderer;
         MaterialPropertyBlock properties;
         public static Color ConfidenceColor(float percent) => percent >= 80 ? new Color32(255, 85, 79, 255) :
@@ -19,14 +25,14 @@ namespace AmbulanceAR
             arrowRenderer.enabled = visible;
             if (!visible) return;
             transform.position = headPosition + worldDirection * radius + Vector3.up * heightOffset;
-            // Mesh tip is local +Z. World +Y is up; no pitch/roll or unexplained corrections.
-            transform.rotation = Quaternion.LookRotation(worldDirection, Vector3.up);
+            // Raise the tip to expose the broad top face; preserve its world azimuth.
+            transform.rotation = Quaternion.LookRotation(worldDirection, Vector3.up) * Quaternion.Euler(-tiltDegrees, 0, 0);
             float pulse = 1 + (pulseScale - 1) * .5f * (1 - Mathf.Cos(time * 2 * Mathf.PI / Mathf.Max(.1f, pulseSeconds)));
-            transform.localScale = Vector3.one * pulse;
+            transform.localScale = Vector3.one * (baseScale * pulse);
             if (properties == null) properties = new MaterialPropertyBlock();
-            Color color = ConfidenceColor(confidence);
+            Color color = confidence >= 80 ? highConfidenceColor : confidence >= 50 ? mediumConfidenceColor : lowConfidenceColor;
             properties.SetColor("_BaseColor", color);
-            properties.SetColor("_EmissionColor", color * .5f);
+            properties.SetColor("_EmissionColor", color * emissionIntensity);
             arrowRenderer.SetPropertyBlock(properties);
         }
 

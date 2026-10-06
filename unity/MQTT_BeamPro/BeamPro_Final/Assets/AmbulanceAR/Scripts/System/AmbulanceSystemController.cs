@@ -11,12 +11,15 @@ namespace AmbulanceAR
         public AmbulanceArrowView arrow;
         public AmbulanceAlertView alert;
         [Min(.1f)] public float staleTimeout = 1.5f;
+        [Tooltip("Horizontal half-angle from the camera forward direction, in degrees.")]
+        [Range(1, 89)] public float visibleHalfAngle = 25;
         public StateFreshness State { get; } = new StateFreshness();
         int lastEpoch = -1;
         bool wasTracked;
 #if UNITY_EDITOR
         public bool editorSimulation = true;
         public bool simulatedDetected = true;
+        public bool simulateSilence;
         [Range(0, 359)] public float simulatedRawDoa = 270;
         [Range(0, 100)] public float simulatedConfidence = 98;
         [Range(-180, 180)] public float simulatedHeadYaw;
@@ -48,7 +51,7 @@ namespace AmbulanceAR
             simulation = editorSimulation;
             if (simulation != wasSimulation)
             {
-                State.Clear(); direction.Clear();
+                State.Clear(); direction.Clear(); alert.ResetState();
                 var driver = poses.head.GetComponent<UnityEngine.InputSystem.XR.TrackedPoseDriver>();
                 if (driver) driver.enabled = !simulation;
                 if (!simulation) subscriber.Begin();
@@ -66,7 +69,7 @@ namespace AmbulanceAR
             if (!simulation)
             {
                 if (subscriber.Epoch != lastEpoch)
-                { State.Clear(); direction.Clear(); lastEpoch = subscriber.Epoch; }
+                { State.Clear(); direction.Clear(); alert.ResetState(); lastEpoch = subscriber.Epoch; }
                 while (subscriber.TryDequeue(out var packet))
                 {
                     if (packet.Epoch != subscriber.Epoch || now - packet.ReceivedAt >= staleTimeout) continue;
@@ -83,7 +86,7 @@ namespace AmbulanceAR
                     float signed = local - direction.doaOffsetDeg;
                     simulatedRawDoa = AmbulanceDirectionController.Normalize360(direction.invertDoa ? -signed : signed);
                 }
-                var sample = new AmbulanceState { detected = simulatedDetected, class_name = simulatedDetected ? "siren" : "other",
+                var sample = new AmbulanceState { detected = simulatedDetected, class_name = simulatedDetected ? "siren" : simulateSilence ? "silence" : "other",
                     confidence_pct = simulatedConfidence, doa_deg = simulateUnknown ? -1 : simulatedRawDoa,
                     rms = .041f, inference_ms = 23.8f, timestamp_ms = ++simulatedTimestamp };
                 if (State.Accept(JsonUtility.ToJson(sample), now)) ApplyDirection(now);
@@ -91,18 +94,20 @@ namespace AmbulanceAR
 #endif
             bool connected = simulation || subscriber.Connected;
             bool fresh = connected && State.Fresh(now, staleTimeout);
-            bool detected = fresh && State.Current.detected;
+            bool detected = fresh && AcousticStatusFilter.IsSiren(State.Current);
             if (!fresh || !detected) direction.Clear();
             direction.Step(Time.unscaledDeltaTime);
-            arrow.Present(detected && poses.Tracked && direction.HasDirection, poses.head.position,
+            bool knownDirection = detected && poses.Tracked && direction.HasDirection;
+            var cue = knownDirection ? SourceGuidance.Evaluate(direction.WorldDirection, poses.head.forward, poses.head.right, visibleHalfAngle) : DirectionCue.None;
+            arrow.Present(knownDirection && cue == DirectionCue.None, poses.head.position,
                 direction.HasDirection ? direction.WorldDirection : Vector3.forward,
                 State.Current?.confidence_pct ?? 0, Time.unscaledTime);
             string status = !connected ? subscriber.Status : fresh ? (simulation ? "EDITOR SIMULATION" : "MQTT: live") : "MQTT: STALE / waiting";
-            alert.Present(State.Current, fresh, poses.Tracked, status);
+            alert.Present(State.Current, fresh, poses.Tracked, status, cue, now);
         }
         void ApplyDirection(double receivedAt)
         {
-            if (!State.Current.detected || State.Current.doa_deg < 0) { direction.Clear(); return; }
+            if (!AcousticStatusFilter.IsSiren(State.Current) || State.Current.doa_deg < 0) { direction.Clear(); return; }
             if (poses.TryAt(receivedAt, out var yaw)) direction.Accept(State.Current.doa_deg, yaw);
             else direction.Clear();
         }
@@ -113,6 +118,7 @@ namespace AmbulanceAR
             GUILayout.BeginArea(new Rect(12, 12, 290, 390), GUI.skin.box);
             GUILayout.Label("AMBULANCE / EDITOR SIMULATION");
             simulatedDetected = GUILayout.Toggle(simulatedDetected, "Siren detected");
+            if (!simulatedDetected) simulateSilence = GUILayout.Toggle(simulateSilence, "Quiet (off = ordinary sound)");
             lockSimulatedWorldSource = GUILayout.Toggle(lockSimulatedWorldSource, "Fixed world source (DOA follows head)");
             GUILayout.Label($"Head Yaw: {simulatedHeadYaw:F0}");
             simulatedHeadYaw = GUILayout.HorizontalSlider(simulatedHeadYaw, -180, 180);

@@ -82,9 +82,10 @@ namespace AmbulanceAR.Tests
                 var view = go.AddComponent<AmbulanceArrowView>(); view.arrowRenderer = go.AddComponent<MeshRenderer>();
                 Vector3 head = new Vector3(4, 1.6f, 3);
                 view.Present(true, head, Vector3.back, 98, 0);
-                Assert.That(Vector3.Distance(go.transform.position, head + Vector3.back * 2.5f + Vector3.down * .55f), Is.LessThan(.0001));
-                Assert.That(Vector3.Dot(go.transform.forward, Vector3.back), Is.GreaterThan(.999f));
-                view.Present(true, head, Vector3.back, 98, 2); Assert.That(go.transform.localScale.x, Is.EqualTo(1.1f).Within(.0001));
+                Assert.That(Vector3.Distance(go.transform.position, head + Vector3.back * 1.8f + Vector3.down * .25f), Is.LessThan(.0001));
+                Assert.That(Vector3.Dot(Vector3.ProjectOnPlane(go.transform.forward, Vector3.up).normalized, Vector3.back), Is.GreaterThan(.999f));
+                Assert.That(go.transform.forward.y, Is.EqualTo(Mathf.Sin(35 * Mathf.Deg2Rad)).Within(.0001));
+                view.Present(true, head, Vector3.back, 98, .5f); Assert.That(go.transform.localScale.x, Is.EqualTo(1.2f).Within(.0001));
                 view.Present(false, head, Vector3.back, 98, 3); Assert.False(view.arrowRenderer.enabled);
             }
             finally { if (mesh) UnityEngine.Object.DestroyImmediate(mesh); UnityEngine.Object.DestroyImmediate(go); }

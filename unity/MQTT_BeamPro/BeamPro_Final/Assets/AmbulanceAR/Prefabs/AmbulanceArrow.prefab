@@ -99,8 +99,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa0317af7a19f2142b78afe15e24e35b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 2.5
-  heightOffset: -0.55
-  pulseScale: 1.1
-  pulseSeconds: 4
+  radius: 1.8
+  heightOffset: -0.25
+  tiltDegrees: 35
+  baseScale: 1
+  pulseScale: 1.2
+  pulseSeconds: 1
+  emissionIntensity: 1.5
+  lowConfidenceColor: {r: 0.7058824, g: 0.75686276, b: 0.8117647, a: 1}
+  mediumConfidenceColor: {r: 1, g: 0.76862746, b: 0.30980393, a: 1}
+  highConfidenceColor: {r: 1, g: 0.33333334, b: 0.30980393, a: 1}
   arrowRenderer: {fileID: 2593471198778756920}
