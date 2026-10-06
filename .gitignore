@@ -317,3 +317,17 @@ sysinfo.txt
 !unity/**/Assets/
 !unity/**/Assets/**/
 !unity/**/Assets/**
+
+# Exclude Python virtual environments, including those under Unity Assets.
+.venv/
+.venv-*/
+.venv_*/
+venv/
+venv-*/
+venv_*/
+env/
+ENV/
+audioenv*/
+
+# Unity Android build temporary files
+.utmp/
