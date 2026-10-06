@@ -1,5 +1,17 @@
 # 統合救急車サイレン音響シミュレーション
 
+## GUIによるデータセット生成（2026-09-30追加）
+
+複数条件の一括生成は MATLAB で `dataset_generator` を実行する。
+1音声=1行の条件表、共通設定、seed連番、設定保存/読込、進捗表示、
+失敗後の継続、Skip/Overwrite/Renameを利用できる。
+最終WAVは `datasets/<Dataset名>/audio/`、診断結果は
+`simulation_results/<実験名>/`、条件一覧は `dataset_manifest.xlsx` に保存する。
+
+操作方法、CPA・Receiver速度（RV）と既存configの対応、ファイル構成、
+スクリプト実行例、検証方法は [DATASET_PIPELINE.md](DATASET_PIPELINE.md) を参照する。
+従来の `main_simulation` と音響計算関数はそのまま利用できる。
+
 ## 目的
 
 本環境は、救急車サイレン検知AIの評価用音声を、Source（救急車）とReceiver（ユーザ）の幾何配置および運動から生成するMATLAB実装である。波形を経験的に加工するのではなく、各伝搬成分の経路長と放射時刻を求め、物理音圧 `[Pa]` の尺度で合成する。

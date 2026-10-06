@@ -24,10 +24,12 @@ config.audio.loopInput = false;             % False: zero pad if duration exceed
 
 % Constant-acceleration Cartesian trajectories.
 config.source.initialPositionM = [-50.0, 0.0, 1.5];
+% 救急車（音源）：時速60 km
 config.source.initialVelocityMps = [60/3.6, 0.0, 0.0];
 config.source.accelerationMps2 = [0.0, 0.0, 0.0];
 
 config.receiver.initialPositionM = [0.0, 10.0, 1.2];
+% 歩行者（受信者）値は [x方向, y方向, z方向] の速度（m/s）
 config.receiver.initialVelocityMps = [0.0, 0.0, 0.0];
 config.receiver.accelerationMps2 = [0.0, 0.0, 0.0];
 
@@ -47,10 +49,16 @@ config.reflection.planes = struct( ...
 config.reflection.obstacleFacesEnabled = true;
 
 % Seeded axis-aligned boxes resting on z=0.
-config.obstacle.enabled = true;
+
+% 障害物あり／なし
+config.obstacle.enabled = true;   % あり
+% config.obstacle.enabled = false; % なし
+
 config.obstacle.count = 24;
+
 %ランダム障害物生成に使用する乱数シード値
 config.obstacle.seed = 1;
+
 config.obstacle.boundsMinM = [-45.0, -5.0, 0.0];
 config.obstacle.boundsMaxM = [ 45.0, 18.0, 0.0];
 config.obstacle.widthRangeM = [0.8, 3.0];
