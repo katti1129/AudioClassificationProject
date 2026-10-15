@@ -1,0 +1,9 @@
+function b = box(id,center,width,depth,height)
+%BOX Deterministic ground-standing AABB fixture; all geometry is in metres.
+% Inputs: ID, horizontal center, width/depth/height. Output: simulator struct.
+center=[center(1:2),height/2]; half=[width depth height]/2;
+b=struct('id',"OBS_"+compose('%03d',id),'centerM',center, ...
+    'widthM',width,'depthM',depth,'heightM',height, ...
+    'minCornerM',center-half,'maxCornerM',center+half, ...
+    'material',"validation_fixture",'pressureReflectionCoefficient',.6);
+end
