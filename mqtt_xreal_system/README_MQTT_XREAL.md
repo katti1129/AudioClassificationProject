@@ -317,3 +317,10 @@ For later field evaluation, authentication/TLS and QoS choice should be decided 
 ## 7. After the MQTT prototype works
 
 Keep the first version head-locked. Then add Air 2 Ultra 6DoF so the AR indication can remain aligned to a real-world direction while the user turns their head. That step requires defining the coordinate relationship between the ReSpeaker mounting direction and the Air 2 Ultra tracking frame; MQTT itself does not solve that coordinate transform.
+
+## 8. 完成版の任意の遅延計測（2026-10-15追加）
+
+`Jetson_Final` と `BeamPro_Final` に研究用計測モードを追加しました。既定OFF、通常のMQTT v1形式・DOA・表示は維持します。
+音声内の開始推定→サイレン判定→MQTT→Unityフレーム終端を記録し、警告と矢印の時間をUnity側CSVに保存します。
+Jetsonの `--measure-latency` とUnityの `Measure Latency` を有効にし、APKを再ビルドしてください。
+光学表示の実測とは区別します。[測定・時計合わせ・CSV回収手順](docs/software_latency_measurement.md)を参照してください。

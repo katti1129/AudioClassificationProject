@@ -312,7 +312,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4289898137
   m_fontColor: {r: 0.6, g: 0.65, b: 0.7, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -325,7 +325,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -877,7 +877,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -1263,6 +1263,7 @@ GameObject:
   - component: {fileID: 931949620}
   - component: {fileID: 931949619}
   - component: {fileID: 931949618}
+  - component: {fileID: 931949623}
   m_Layer: 0
   m_Name: Ambulance System
   m_TagString: Untagged
@@ -1287,6 +1288,7 @@ MonoBehaviour:
   poses: {fileID: 931949619}
   arrow: {fileID: 939165966}
   alert: {fileID: 574002759}
+  latencyMeasurement: {fileID: 931949623}
   staleTimeout: 1.5
   visibleHalfAngle: 25
   editorSimulation: 1
@@ -1360,6 +1362,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &931949623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931949617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d62fda13b248f3a3546780e022f3c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  measureLatency: 1
+  subscriber: {fileID: 931949621}
+  observationSeconds: 10
 --- !u!1 &939165965
 GameObject:
   m_ObjectHideFlags: 0

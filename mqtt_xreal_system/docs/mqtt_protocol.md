@@ -1,5 +1,9 @@
 # MQTT v1
 
+通常のv1 JSONは変更せず、任意の研究用計測モードでは `<state-topic>/latency/` 以下の別トピックを使用します。
+計測専用通信もQoS 0・retain falseで、通常表示は計測情報を待ちません。
+トピック・時計補正・CSVの詳細は [ソフトウェア遅延測定](software_latency_measurement.md) を参照してください。既定OFFです。
+
 - Broker：Jetson Mosquitto。Jetsonの初期接続先127.0.0.1:1883。
 - Beam Pro：InspectorのBroker Hostへ**JetsonのLAN IP**を設定。初期値192.168.1.50は例。
 - Topic：`research/ambulance/v1/state`

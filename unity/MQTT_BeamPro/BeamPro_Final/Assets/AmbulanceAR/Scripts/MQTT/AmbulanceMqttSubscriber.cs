@@ -67,6 +67,7 @@ namespace AmbulanceAR
                 client.DisconnectedAsync += args => { ResetSession(); status = "MQTT: disconnected / retrying"; return Task.CompletedTask; };
                 client.ApplicationMessageReceivedAsync += args =>
                 {
+                    double receivedAt = ReceiveClock.Now;
                     var message = args.ApplicationMessage;
                     if (message.Topic == channel && !message.Retain && message.PayloadSegment.Count <= 4096)
                     {
@@ -74,7 +75,7 @@ namespace AmbulanceAR
                         lock (gate)
                         {
                             while (pending.Count >= 16) pending.Dequeue();
-                            pending.Enqueue(new Packet(json, ReceiveClock.Now, epoch));
+                            pending.Enqueue(new Packet(json, receivedAt, epoch));
                         }
                     }
                     return Task.CompletedTask;

@@ -13,6 +13,9 @@ class Config:
     interval: float = 0.10
     result_ttl: float = 1.0
     log_dir: Path | None = None
+    measure_latency: bool = False
+    latency_onset_threshold: float = 0.01
+    latency_quiet_seconds: float = 1.0
 
 
 def parse_args(argv=None):
@@ -24,7 +27,12 @@ def parse_args(argv=None):
     parser.add_argument("--interval", type=float, default=0.10)
     parser.add_argument("--result-ttl", type=float, default=1.0)
     parser.add_argument("--log-dir", type=Path, default=None, help="Enable CSV logging to this folder")
+    parser.add_argument("--measure-latency", action="store_true", help="Enable isolated-siren latency experiment")
+    parser.add_argument("--latency-onset-threshold", type=float, default=.01)
+    parser.add_argument("--latency-quiet-seconds", type=float, default=1.0)
     args = parser.parse_args(argv)
+    if not 0 < args.latency_onset_threshold <= 1 or not .2 <= args.latency_quiet_seconds <= 30:
+        parser.error("latency onset threshold (0,1], quiet seconds [.2,30] required")
     if not args.model.is_file():
         parser.error("--model must point to an existing trained model")
     if not 1 <= args.port <= 65535 or not 0.02 <= args.interval <= 1 or args.result_ttl <= args.interval:

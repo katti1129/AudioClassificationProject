@@ -149,6 +149,9 @@ namespace AmbulanceAR.Editor
             var direction = systemObject.AddComponent<AmbulanceDirectionController>();
             var poses = systemObject.AddComponent<HeadPoseHistory>(); poses.head = camera.transform;
             var system = systemObject.AddComponent<AmbulanceSystemController>();
+            var latency = systemObject.AddComponent<LatencyMeasurementController>();
+            latency.subscriber = subscriber; latency.measureLatency = false;
+            system.latencyMeasurement = latency;
             system.subscriber = subscriber; system.direction = direction; system.poses = poses; system.arrow = arrow; system.alert = alert;
             EditorSceneManager.SaveScene(scene, ScenePath);
             // Preserve old scenes but only enable the new application scene for APK.

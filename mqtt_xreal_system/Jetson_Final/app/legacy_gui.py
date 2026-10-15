@@ -97,19 +97,27 @@ gui_latency = 0.0
 # ==========================================
 # 4. 音声入力コールバック
 # ==========================================
+latency_probe = None
+buffer_timing = None
+last_result_timing = None
+
+
 def audio_callback(indata, frames, time_info, status):
     if status:
         # エラー表示は改行してしまうため、デバッグ時以外はコメントアウトしても良い
         pass
+    chunk = indata.copy()
+    if latency_probe is not None:
+        chunk = (chunk, latency_probe.audio(chunk[:, 0], RATE, time_info, status))
     try:
-        data_queue.put_nowait(indata.copy())
+        data_queue.put_nowait(chunk)
     except Full:
         try:
             data_queue.get_nowait()
         except Empty:
             pass
         try:
-            data_queue.put_nowait(indata.copy())
+            data_queue.put_nowait(chunk)
         except Full:
             pass
 
@@ -117,18 +125,23 @@ def audio_callback(indata, frames, time_info, status):
 # 5. バッファ更新スレッド
 # ==========================================
 def buffer_update_thread():
-    global audio_buffer, is_running
+    global audio_buffer, is_running, buffer_timing
     print("[Info] Buffer update thread started.")
 
     while is_running:
         try:
             data_chunk = data_queue.get(timeout=1.0)
+            metadata = None
+            if isinstance(data_chunk, tuple):
+                data_chunk, metadata = data_chunk
+                metadata = latency_probe.timing.buffered(metadata)
             data_chunk = data_chunk[:, 0]
             chunk_len = len(data_chunk)
 
             with buffer_lock:
                 audio_buffer = np.roll(audio_buffer, -chunk_len)
                 audio_buffer[-chunk_len:] = data_chunk
+                buffer_timing = metadata
         except:
             continue
 
@@ -457,7 +470,7 @@ def preprocess_for_model(audio_segment_float):
 # 10. 推論スレッド
 # ==========================================
 def inference_thread():
-    global is_running, audio_buffer, model
+    global is_running, audio_buffer, model, last_result_timing
     print("[Info] Inference thread started.")
 
     # クラスのインデックスを取得（表示用）
@@ -479,6 +492,7 @@ def inference_thread():
     while is_running:
         with buffer_lock:
             current_buffer = np.array(audio_buffer, dtype=np.float32)
+            measurement = dict(buffer_timing) if buffer_timing else None
 
         start_time = time.time()
 
@@ -492,8 +506,8 @@ def inference_thread():
             final_class = "silence"
             confidence = 100.0
             latency = time.time() - start_time
+            last_result_timing = latency_probe.timing.result(measurement, final_class) if latency_probe else None
             doa_text = get_current_direction_text()
-
             update_gui_state(final_class, confidence, rms, latency)
 
             print(
@@ -525,8 +539,8 @@ def inference_thread():
         confidence = smoothed_preds[CLASS_NAMES.index(final_class)] * 100
 
         latency = time.time() - start_time
+        last_result_timing = latency_probe.timing.result(measurement, final_class) if latency_probe else None
         doa_text = get_current_direction_text()
-
         update_gui_state(final_class, confidence, rms, latency)
 
         print(

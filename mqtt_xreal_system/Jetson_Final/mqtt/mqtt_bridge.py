@@ -82,6 +82,7 @@ class SirenMqttPublisher:
         rms: float = 0.0,
         inference_ms: float = 0.0,
         force: bool = False,
+        on_published=None,
     ) -> bool:
         """Publish one state message.
 
@@ -119,6 +120,7 @@ class SirenMqttPublisher:
         }
 
         try:
+            submitted_at = time.monotonic() if on_published else None
             info = self._client.publish(
                 self.topic,
                 json.dumps(payload, ensure_ascii=False, separators=(",", ":"), allow_nan=False),
@@ -130,6 +132,11 @@ class SirenMqttPublisher:
             return False
         if info.rc == mqtt.MQTT_ERR_SUCCESS:
             self._last_publish_monotonic = now
+            if on_published:
+                try:
+                    on_published(payload["timestamp_ms"], submitted_at)
+                except Exception as exc:
+                    print(f"[Latency] observer failed: {type(exc).__name__}")
             return True
 
         print(f"[MQTT] publish failed: rc={info.rc}")

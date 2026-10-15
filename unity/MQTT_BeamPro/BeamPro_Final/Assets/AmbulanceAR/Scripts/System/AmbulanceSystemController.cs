@@ -10,6 +10,7 @@ namespace AmbulanceAR
         public HeadPoseHistory poses;
         public AmbulanceArrowView arrow;
         public AmbulanceAlertView alert;
+        public LatencyMeasurementController latencyMeasurement;
         [Min(.1f)] public float staleTimeout = 1.5f;
         [Tooltip("Horizontal half-angle from the camera forward direction, in degrees.")]
         [Range(1, 89)] public float visibleHalfAngle = 25;
@@ -104,6 +105,11 @@ namespace AmbulanceAR
                 State.Current?.confidence_pct ?? 0, Time.unscaledTime);
             string status = !connected ? subscriber.Status : fresh ? (simulation ? "EDITOR SIMULATION" : "MQTT: live") : "MQTT: STALE / waiting";
             alert.Present(State.Current, fresh, poses.Tracked, status, cue, now);
+            if (latencyMeasurement && latencyMeasurement.measureLatency)
+                latencyMeasurement.ObservePresentation(!simulation && fresh ? State.Current.timestamp_ms : 0,
+                    State.ReceivedAt, !simulation && detected && alert.warningRoot.activeInHierarchy,
+                    !simulation && knownDirection && cue == DirectionCue.None && arrow.arrowRenderer.enabled,
+                    State.Current?.confidence_pct ?? double.NaN);
         }
         void ApplyDirection(double receivedAt)
         {

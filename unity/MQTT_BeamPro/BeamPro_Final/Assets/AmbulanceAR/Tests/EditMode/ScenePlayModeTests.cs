@@ -16,6 +16,9 @@ namespace AmbulanceAR.Tests
             yield return new WaitForSecondsRealtime(.25f);
             var system = Object.FindFirstObjectByType<AmbulanceSystemController>();
             Assert.NotNull(system);
+            Assert.NotNull(system.latencyMeasurement);
+            Assert.False(system.latencyMeasurement.measureLatency);
+            Assert.IsNull(system.latencyMeasurement.CsvPath);
             Assert.True(system.editorSimulation);
             Assert.True(system.arrow.arrowRenderer.enabled);
             Assert.True(system.alert.warningRoot.activeInHierarchy);

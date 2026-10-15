@@ -20,12 +20,19 @@ def main(argv=None):
     publisher = SirenMqttPublisher(broker_host=config.broker, broker_port=config.port,
                                   topic=config.topic, min_publish_interval=config.interval)
     logger = ExperimentLogger(config.log_dir)
+    probe = None
+    if config.measure_latency:
+        from ..telemetry.latency_probe import LatencyProbe
+        probe = LatencyProbe(config.broker, config.port, config.topic,
+                             config.latency_onset_threshold, config.latency_quiet_seconds)
+        gui.latency_probe = probe
+        print("[Latency] ON: isolated sound onset; rearm after quiet. Unity measurement must also be ON.")
     stop = threading.Event()
     original_update, original_audio = gui.update_gui_state, gui.audio_callback
 
     def update(final_class, confidence, rms, latency):
         original_update(final_class, confidence, rms, latency)
-        relay.update(final_class, confidence, rms, latency)
+        relay.update(final_class, confidence, rms, latency, gui.last_result_timing if probe else None)
 
     def audio(indata, frames, time_info, status):
         original_audio(indata, frames, time_info, status)
@@ -53,11 +60,13 @@ def main(argv=None):
 
     def publish_loop():
         while not stop.is_set():
-            sample = relay.snapshot(config.result_ttl)
+            sample = relay.snapshot(config.result_ttl, with_measurement=probe is not None)
             if sample is not None:
                 # Read DOA at publish time, not at start of the 1 s audio window.
                 sample["doa_deg"] = gui.get_current_direction_value()
-                publisher.publish_state(**sample)
+                measurement = sample.pop("measurement", None)
+                observer = (lambda stamp, sent, m=measurement: probe.published(m, stamp, sent)) if probe else None
+                publisher.publish_state(**sample, on_published=observer)
                 logger.submit(dict(sample, timestamp=datetime.now(timezone.utc).isoformat(), mqtt_connected=publisher.connected))
             # Expired AI/audio state is never re-stamped and replayed as fresh.
             stop.wait(config.interval)
@@ -71,6 +80,9 @@ def main(argv=None):
         worker.join(timeout=2)
         publisher.close()
         logger.close()
+        if probe:
+            probe.close()
+            gui.latency_probe = None
 
 
 if __name__ == "__main__":
