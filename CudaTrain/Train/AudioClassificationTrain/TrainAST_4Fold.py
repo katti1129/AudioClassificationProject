@@ -245,7 +245,7 @@ def run_fold_training():
                     xticklabels=[id_to_label[i] for i in range(n_classes)],
                     yticklabels=[id_to_label[i] for i in range(n_classes)])
         plt.xlabel("Predicted"); plt.ylabel("True")
-        plt.title(f"Confusion Matrix - {eval_fold.name}")
+        plt.title(f"Confusion Matrix - {eval_fold_name}")
         plt.tight_layout()
         plt.savefig(out_dir / "confusion_matrix.png"); plt.close()
 
