@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+TARGET_FILEの音声を1つ読み込む
+先頭の1秒だけを使用する
+CRNNで1回推論する
+otherとsirenのSoftmax確率を表示する
+"""
+
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
@@ -36,7 +43,7 @@ MODEL_PATH = "/Users/katti/Desktop/Lab/AudioClassificationTesting/code/best.kera
 # クラス名 (学習時の順番)
 CLASS_NAMES = ['other', 'siren']
 
-# 学習時と同じパラメータ (TrainCRNN_9Fold.pyより)
+# 学習時と同じパラメータ (TrainCRNN_4Fold.pyより)
 SAMPLE_RATE = 16000
 DURATION = 1.0
 WIN_SAMPLES = int(SAMPLE_RATE * DURATION) # 24000
