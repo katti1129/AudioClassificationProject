@@ -1,0 +1,8 @@
+プロセッサ	13th Gen Intel(R) Core(TM) i9-13900HK (2.60 GHz)
+実装 RAM	32.0 GB (31.7 GB 使用可能)
+グラフィックス カード	NVIDIA GeForce RTX 4070 Laptop GPU (8 GB)
+Intel(R) Iris(R) Xe Graphics (128 MB)
+システムの種類	64 ビット オペレーティング システム、x64 ベース プロセッサ
+ペンとタッチ	このディスプレイでは、ペン入力とタッチ入力は利用できません
+
+
