@@ -22,6 +22,9 @@ function [diffractedPa, diffraction] = synthesizeDiffraction( ...
 %   as a path-equivalent loss per FFT bin with weighted overlap-add. This is
 %   an engineering scalar-acoustic approximation, not full UTD or a solved
 %   coherent double-edge diffraction coefficient.
+%   Topologically different rays are rendered with independent delays by
+%   renderDiffractionBranches. The raw selected-path delay remains in D for
+%   audit; D.rendering contains the actual per-track read trajectories.
 %
 %   Inputs use SI units. SOURCEPA is calibrated pressure [Pa]. OBSTACLES is
 %   a struct array of static 3D AABBs. CANDIDATEMASK is a logical vector
@@ -77,6 +80,7 @@ unsupportedMultiplePath = false(nFrames, 1);
 multiplePathApproximationUsed = false(nFrames,1);
 usedObstacleMask = false(nFrames,nObstacles);
 pathPointsM = cell(nFrames,1);
+pathKey = strings(nFrames,1);
 
 if config.diffraction.enabled && nObstacles > 0 && any(candidateMask)
     for frameIndex = 1:nFrames
@@ -122,6 +126,7 @@ if config.diffraction.enabled && nObstacles > 0 && any(candidateMask)
             obstacleIndex(frameIndex) = frameGeometry.obstacleIndex;
             usedObstacleMask(frameIndex,frameGeometry.obstacleIndices)=true;
             pathPointsM{frameIndex}=frameGeometry.diffractionPointsM;
+            pathKey(frameIndex)=acoustics.diffractionPathKey(frameGeometry,obstacles);
             multiplePathApproximationUsed(frameIndex)= ...
                 frameGeometry.multiplePathApproximation;
             pointM(frameIndex, :) = frameGeometry.pointM;
@@ -167,30 +172,18 @@ if any(unsupportedMultiplePath)
     end
 end
 
-if any(active)
-    activeAudio = logical(interp1(analysisTimeSec, double(active), ...
-        observationTimeSec, 'previous', 0));
-    tauAudio = interpFinite(analysisTimeSec, emissionTimeSec, observationTimeSec, ...
-        observationTimeSec);
-    directDistanceAudio = interpFinite(analysisTimeSec, directDistanceM, ...
-        observationTimeSec, ...
-        config.physics.minimumDistanceM);
-    deltaAudio = interpFinite(analysisTimeSec, excessPathM, observationTimeSec, 0);
-
-    warpedPa = interp1(sourceTimeSec, sourcePa, tauAudio, 'linear', 0);
-    % ITU J(v) is an insertion loss relative to the unobstructed free-space
-    % field at the same Source-Receiver separation. Use 1/directDistance
-    % for that reference field; the longer bypass length remains in tau and
-    % therefore in propagation delay/phase.
-    spreading = config.audio.referenceDistanceM ./ max(directDistanceAudio, ...
-        config.physics.minimumDistanceM);
-    baseDiffractedPa = warpedPa .* spreading .* double(activeAudio);
-    diffractedPa = applyFrequencyDependentLoss(baseDiffractedPa, deltaAudio, ...
-        activeAudio, config.audio.processingSampleRateHz, config);
-else
-    activeAudio = false(nSamples, 1);
-    tauAudio = observationTimeSec;
-end
+% Keep the selected geometry time series unchanged for audit. Do not turn
+% a jump between different rays into a single resampling-speed excursion.
+frames=struct('analysisTimeSec',analysisTimeSec,'active',active, ...
+    'pathKey',pathKey,'emissionTimeSec',emissionTimeSec, ...
+    'directDistanceM',directDistanceM,'excessPathM',excessPathM, ...
+    'pathPointsM',{pathPointsM});
+lossFilter=@(x,delta,mask) applyFrequencyDependentLoss(x,delta,mask, ...
+    config.audio.processingSampleRateHz,config);
+[diffractedPa,tauAudio,rendering]=acoustics.renderDiffractionBranches( ...
+    sourcePa,sourceTimeSec,observationTimeSec,sourceConfig,receiverConfig, ...
+    obstacles,frames,config,lossFilter);
+activeAudio=rendering.activeAudio;
 
 perObstacle = makePerObstacleTable(obstacles, obstacleIndex, usedObstacleMask, pointM, ...
     secondPointM, sourceDistanceM, surfaceDistanceM, receiverDistanceM, ...
@@ -205,6 +198,8 @@ diffraction.obstacleIndex = obstacleIndex;
 diffraction.pointM = pointM;
 diffraction.secondPointM = secondPointM;
 diffraction.pathPointsM = pathPointsM;
+diffraction.pathKey = pathKey;
+diffraction.rendering = rendering;
 diffraction.sourceDistanceM = sourceDistanceM;
 diffraction.surfaceDistanceM = surfaceDistanceM;
 diffraction.receiverDistanceM = receiverDistanceM;
@@ -213,6 +208,7 @@ diffraction.directDistanceM = directDistanceM;
 diffraction.excessPathM = excessPathM;
 diffraction.emissionTimeSec = emissionTimeSec;
 diffraction.emissionTimeAudioSec = tauAudio;
+% NaN denotes silence or a multi-ray mix, which has no unique emission time.
 diffraction.lossReferenceDb = lossReferenceDb;
 diffraction.referenceFrequencyHz = config.diffraction.referenceFrequencyHz;
 diffraction.converged = converged;
@@ -364,21 +360,6 @@ for obstacleIndex = 1:numel(obstacles)
             blocked = true;
             return;
         end
-    end
-end
-end
-
-function values = interpFinite(time, valuesAtTime, queryTime, fallback)
-valid = isfinite(valuesAtTime);
-if nnz(valid) >= 2
-    values = interp1(time(valid), valuesAtTime(valid), queryTime, 'linear', 'extrap');
-elseif nnz(valid) == 1
-    values = repmat(valuesAtTime(valid), size(queryTime));
-else
-    if isscalar(fallback)
-        values = repmat(fallback, size(queryTime));
-    else
-        values = fallback;
     end
 end
 end

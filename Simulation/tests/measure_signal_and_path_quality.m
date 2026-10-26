@@ -81,7 +81,25 @@ try
         detail.obstacleSetChanges=nnz(changed);
         detail.warp=table(dt(1:end-1),dt(2:end),rate,pair,changed,bad, ...
             'VariableNames',{'StartSec','EndSec','TimeWarp','BothActive','ObstacleSetChanged','OutsideMotionBounds'});
-        if ~any(pair)
+        if isfield(d,'rendering')
+            % The selected ray may jump while two independently delayed
+            % rays are mixed. Retain that raw observation, but audit the
+            % actual renderer separately; never differentiate across IDs.
+            rawStatus="PASS";if any(bad),rawStatus="WARN";end
+            checks=[checks;researchtest.row(label,'diffraction_selected_path_jumps', ...
+                rawStatus,nnz(bad),0,0,'frames', ...
+                'Raw selected-path rate excursions retained; not the read rate of a mixed signal')];
+            a=d.rendering;
+            if a.testedPairs>0
+                checks=[checks;researchtest.check(label,'diffraction_time_warp', ...
+                    a.timeWarpOutlierPairs,0,0,'sample_pairs', ...
+                    'Actual independently rendered track read times; motion-bound margin 0.002 unchanged')];
+            else
+                checks=[checks;missing(label,'diffraction_time_warp','No consecutive weighted rendered samples')];
+            end
+            checks=[checks;researchtest.check(label,'diffraction_render_coverage', ...
+                a.uncoveredActiveSamples,0,0,'samples','Active geometry without a valid rendered branch')];
+        elseif ~any(pair)
             checks=[checks;missing(label,'diffraction_time_warp','No consecutive active frames')];
         else
             checks=[checks;researchtest.check(label,'diffraction_time_warp',nnz(bad),0,0,'frames', ...
