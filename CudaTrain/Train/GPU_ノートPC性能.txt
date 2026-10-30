@@ -1,8 +1,21 @@
+WindowsノートPC
 プロセッサ	13th Gen Intel(R) Core(TM) i9-13900HK (2.60 GHz)
 実装 RAM	32.0 GB (31.7 GB 使用可能)
 グラフィックス カード	NVIDIA GeForce RTX 4070 Laptop GPU (8 GB)
 Intel(R) Iris(R) Xe Graphics (128 MB)
 システムの種類	64 ビット オペレーティング システム、x64 ベース プロセッサ
 ペンとタッチ	このディスプレイでは、ペン入力とタッチ入力は利用できません
+
+UbuntuデスクトップPC（Applied FabricPC BT-I914900MS1N2TTNVM）
+OS	Ubuntu 24.04 LTS
+プロセッサ	Intel(R) Core(TM) i9-14900（24コア／32スレッド、2.0 GHz／最大5.8 GHz）
+実装 RAM	64 GB DDR5-5600（32 GB × 2）
+計算用グラフィックス カード	NVIDIA GeForce RTX 5070 Ti（16 GB GDDR7）
+描画用グラフィックス カード	NVIDIA GeForce GT 1030（2 GB GDDR5）
+内蔵グラフィックス	Intel(R) UHD Graphics 770
+ストレージ	2 TB M.2 NVMe SSD
+マザーボード	ASUS MS-CF05 V2.0
+CPUクーラー	水冷一体型 360 mmラジエーター（120 mmファン × 3）
+LAN	Intel(R) I226-LM Dual 2.5G Gigabit LAN controller
 
 
