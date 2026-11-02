@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-# save as: train_crnn_holdout_from_mix.py
-#
-# UrbanSound8k_ESC50_mix（クラスごとに集約済み）から
-# train / val / test を stratified split
-# → CV と同じ CRNN + Attention 条件で学習
+# manifest.csvの元音源IDでTrain / Validation / Testを一度だけ分割する。
+# fold1～fold4のaccepted音声を使用し、fold5と除外音声は使用しない。
+# CRNN + Attentionのモデル構成・学習条件は維持する。
 
+import csv
+import json
 import os
+import sys
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 import numpy as np
@@ -13,23 +14,36 @@ import librosa
 from pathlib import Path
 import matplotlib.pyplot as plt
 
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix, precision_recall_fscore_support, accuracy_score
 from sklearn.utils.class_weight import compute_class_weight
 
 import tensorflow as tf
 from tensorflow.keras import layers, models
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau# type: ignore
+from tensorflow.keras.callbacks import CSVLogger, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau# type: ignore
 
 import seaborn as sns
 import random
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+# Without9Foldから、4-fold版と共通のmanifest読込・元音源分割を利用する。
+sys.path.insert(0, str(SCRIPT_DIR.parent))
+from fold_training_utils import (
+    FOLD_NAMES,
+    build_label_map,
+    load_accepted_records,
+    split_train_validation,
+    unpack_records,
+)
+
 # ============================================================
 # 1) 設定
 # ============================================================
-DATA_DIR = Path("../../../data/UrbanSound8K_ESC50_1p_2")
-OUT_DIR = Path("../../../Result/runs_crnn_slidwindow_1p_holdout_2Class_mix")
-OUT_DIR.mkdir(parents=True, exist_ok=True)
+DATA_DIR = (
+    SCRIPT_DIR / "../../../data/Mixed_US8K_ESC50_dataset/04_silence_filtered"
+).resolve()
+OUT_DIR = (
+    SCRIPT_DIR / "../../../Result/runs_crnn_slidwindow_1p_holdout_2Class_mix"
+).resolve()
 
 SAMPLE_RATE = 16000
 DURATION = 1.0
@@ -40,6 +54,8 @@ N_FFT = 1024
 HOP_LENGTH = 512
 FMIN, FMAX = 20, 8000
 
+# 元音源数に対する割合。ValidationはTestを除いた残りの10%。
+# 全体ではおおむねTrain 72% / Validation 8% / Test 20%。
 TEST_SIZE = 0.2
 VAL_SIZE = 0.1
 EPOCHS = 50
@@ -59,21 +75,68 @@ def set_seed(seed=42):
 set_seed(SEED)
 
 
-def list_all_data(data_dir):
-    """クラスフォルダから wav と labels を収集"""
-    wavs, labels = [], []
-    for cls_dir in sorted(data_dir.iterdir()):
-        if cls_dir.is_dir():
-            cls_name = cls_dir.name
-            for wav in sorted(cls_dir.glob("*.wav")):
-                wavs.append(wav)
-                labels.append(cls_name)
-    return np.array(wavs), np.array(labels)
+def split_holdout_records(records, test_size=TEST_SIZE, val_size=VAL_SIZE, seed=SEED):
+    """元音源のクラス比率を保ち、3集合に同じsource_idが入らないよう分割する。"""
+    if not 0 < test_size < 1 or not 0 < val_size < 1:
+        raise ValueError("TEST_SIZEとVAL_SIZEは0より大きく1未満にしてください。")
+
+    train_val_records, test_records = split_train_validation(
+        records, val_size=test_size, seed=seed
+    )
+    train_records, val_records = split_train_validation(
+        train_val_records, val_size=val_size, seed=seed
+    )
+    splits = {"train": train_records, "validation": val_records, "test": test_records}
+    seen_sources = set()
+    expected_labels = {record["label"] for record in records}
+    for split_name, selected in splits.items():
+        if not selected:
+            raise RuntimeError(f"{split_name}に音声がありません。")
+        sources = {record["source_id"] for record in selected}
+        if seen_sources & sources:
+            raise RuntimeError(f"{split_name}と他の分割でsource_idが重複しています。")
+        if {record["label"] for record in selected} != expected_labels:
+            raise RuntimeError(f"{split_name}に全クラスが含まれていません。")
+        seen_sources.update(sources)
+    if sum(len(selected) for selected in splits.values()) != len(records):
+        raise RuntimeError("分割前後で音声ファイル数が一致しません。")
+    return splits
 
 
-def build_label_map(label_txt):
-    classes = sorted(list(set(label_txt.tolist())))
-    return {c: i for i, c in enumerate(classes)}
+def save_split_info(splits, label_map):
+    """使用した窓と元音源の所属を保存し、後から分割を確認できるようにする。"""
+    with (OUT_DIR / "split_manifest.csv").open("w", encoding="utf-8", newline="") as file:
+        writer = csv.DictWriter(
+            file,
+            fieldnames=["split", "source_id", "fold", "label", "label_id", "relative_path"],
+        )
+        writer.writeheader()
+        for split_name, selected in splits.items():
+            source_count = len({record["source_id"] for record in selected})
+            print(f"[Split] {split_name}: {len(selected)} files / {source_count} sources")
+            for label in sorted(label_map):
+                class_records = [record for record in selected if record["label"] == label]
+                class_sources = len({record["source_id"] for record in class_records})
+                print(f"  {label}: {len(class_records)} files / {class_sources} sources")
+            for record in selected:
+                writer.writerow({
+                    "split": split_name,
+                    "source_id": record["source_id"],
+                    "fold": record["fold"],
+                    "label": record["label"],
+                    "label_id": label_map[record["label"]],
+                    "relative_path": record["path"].relative_to(DATA_DIR).as_posix(),
+                })
+    with (OUT_DIR / "label_map.json").open("w", encoding="utf-8") as file:
+        json.dump(label_map, file, ensure_ascii=False, indent=2)
+    with (OUT_DIR / "split_config.json").open("w", encoding="utf-8") as file:
+        json.dump({
+            "data_dir": str(DATA_DIR),
+            "fold_names": FOLD_NAMES,
+            "seed": SEED,
+            "test_source_fraction": TEST_SIZE,
+            "validation_source_fraction_of_train_val": VAL_SIZE,
+        }, file, ensure_ascii=False, indent=2)
 
 
 def wav_to_logmelspec(path: Path):
@@ -138,6 +201,7 @@ def attention_pooling(inputs):
 
 class MelSequence(tf.keras.utils.Sequence):
     def __init__(self, paths, labels, batch_size, n_classes, training=True):
+        super().__init__()
         self.paths = np.array(paths)
         self.labels = np.array(labels)
         self.batch_size = batch_size
@@ -213,36 +277,27 @@ def build_crnn(n_classes, time_dim):
 # ============================================================
 def main():
     print("[INFO] データ読込中...")
+    print(f"[INFO] Dataset: {DATA_DIR}")
+    print(f"[INFO] Output: {OUT_DIR}")
 
-    paths, labels_txt = list_all_data(DATA_DIR)
-    label_map = build_label_map(labels_txt)
+    records = load_accepted_records(DATA_DIR)
+    label_map = build_label_map(records)
     id_to_label = {v: k for k, v in label_map.items()}
+    splits = split_holdout_records(records)
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    save_split_info(splits, label_map)
 
-    y_all = np.array([label_map[t] for t in labels_txt])
+    tr_paths, tr_y = unpack_records(splits["train"], label_map)
+    val_paths, val_y = unpack_records(splits["validation"], label_map)
+    test_paths, test_y = unpack_records(splits["test"], label_map)
 
     # time_dim 確認
-    time_dim = wav_to_logmelspec(paths[0]).shape[1]
-
-    # === train / test split ===
-    train_paths, test_paths, train_y, test_y = train_test_split(
-        paths, y_all,
-        test_size=TEST_SIZE,
-        random_state=SEED,
-        stratify=y_all
-    )
-
-    # === train / val split ===
-    tr_paths, val_paths, tr_y, val_y = train_test_split(
-        train_paths, train_y,
-        test_size=VAL_SIZE,
-        random_state=SEED,
-        stratify=train_y
-    )
+    time_dim = wav_to_logmelspec(tr_paths[0]).shape[1]
 
     n_classes = len(label_map)
 
     # === class_weight ===
-    base_w = compute_class_weight("balanced", classes=np.arange(n_classes), y=tr_y)
+    base_w = compute_class_weight(class_weight="balanced", classes=np.arange(n_classes), y=tr_y)
     class_weights = {i: w for i, w in enumerate(base_w)}
 
     # siren だけ補正：CVと全く同じ条件
@@ -262,7 +317,8 @@ def main():
     callbacks = [
         EarlyStopping(monitor="val_accuracy", patience=PATIENCE, restore_best_weights=True),
         ModelCheckpoint(OUT_DIR / "best.keras", save_best_only=True, monitor="val_accuracy"),
-        ReduceLROnPlateau(monitor="val_loss", factor=0.5, patience=8)
+        ReduceLROnPlateau(monitor="val_loss", factor=0.5, patience=8),
+        CSVLogger(OUT_DIR / "history.csv"),
     ]
 
     history = model.fit(
@@ -295,6 +351,15 @@ def main():
 
     print("\n=== Test Classification Report ===")
     print(classification_report(test_y, y_pred, target_names=[id_to_label[i] for i in range(n_classes)], digits=4))
+    report = classification_report(
+        test_y, y_pred,
+        labels=list(range(n_classes)),
+        target_names=[id_to_label[i] for i in range(n_classes)],
+        output_dict=True,
+        zero_division=0,
+    )
+    with (OUT_DIR / "test_metrics.json").open("w", encoding="utf-8") as file:
+        json.dump(report, file, ensure_ascii=False, indent=2)
 
     cm = confusion_matrix(test_y, y_pred)
     np.save(OUT_DIR / "cm.npy", cm)
