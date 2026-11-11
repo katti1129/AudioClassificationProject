@@ -29,7 +29,7 @@ from fold_training_utils import (
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = (
-    SCRIPT_DIR / "../../../Mixed_US8K_ESC50_dataset/04_silence_filtered"
+    SCRIPT_DIR / "../../data/Mixed_US8K_ESC50_dataset/04_silence_filtered"
 ).resolve()
 RESULT_DIR = (SCRIPT_DIR / "../../Result/runs_lstm_fold1to4").resolve()
 
@@ -42,11 +42,10 @@ MAX_LEN_FRAMES = int(np.ceil(MAX_LEN_SAMPLES / HOP_LENGTH))
 EPOCHS = 100
 BATCH_SIZE = 16
 VAL_SIZE = 0.1
-PATIENCE = 50
+PATIENCE = 5
 SEED = 42
 
-np.random.seed(SEED)
-tf.random.set_seed(SEED)
+tf.keras.utils.set_random_seed(SEED)
 
 
 def configure_gpu():
@@ -88,7 +87,6 @@ def build_rnn_model(input_shape, num_classes):
         [
             Input(shape=input_shape),
             Masking(mask_value=0.0),
-            Bidirectional(LSTM(64, return_sequences=True)),
             Bidirectional(LSTM(64)),
             Dense(64, activation="relu"),
             Dropout(0.5),
@@ -182,6 +180,8 @@ def run_fold_training():
 
         out_dir = RESULT_DIR / eval_fold_name
         out_dir.mkdir(parents=True, exist_ok=True)
+        # Reset Python, NumPy, and TensorFlow RNGs independently for each fold.
+        tf.keras.utils.set_random_seed(SEED)
         model = build_rnn_model(x.shape[1:], n_classes)
         callbacks = [
             EarlyStopping(
