@@ -35,7 +35,7 @@ from fold_training_utils import (
 # =========================================================
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_DIR = (
-    SCRIPT_DIR / "../../../Mixed_US8K_ESC50_dataset/04_silence_filtered"
+    SCRIPT_DIR / "../../data/Mixed_US8K_ESC50_dataset/04_silence_filtered"
 ).resolve()
 RESULT_DIR = (SCRIPT_DIR / "../../Result/runs_crnn_fold1to4_train_1s_eval").resolve()
 SAMPLE_RATE = 16000
