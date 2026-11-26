@@ -6,9 +6,15 @@ import time
 from common import config, digest, sound_path
 from network import receive, send
 
+# Device initialization on the parent may block its heartbeat before playback.
+# Keep the short watchdog once the child has received a play command.
+REQUEST_TIMEOUT_S = 2.0
+IDLE_TIMEOUT_S = 30.0
+
 
 def handle_connection(conn, cfg, player, log=print):
     current, played = None, False
+    authenticated, playback_guard = False, False
     rid, stage, cmd = None, "setup", None
     started = time.monotonic()
 
@@ -18,12 +24,13 @@ def handle_connection(conn, cfg, player, log=print):
     # Send error responses before closing the socket, unlike the original handler.
     with conn:
         try:
-            conn.settimeout(2)
             with conn.makefile("rb") as reader:
                 while True:
                     rid, cmd = None, None
                     stage = "receive_request"
-                    report("Waiting for request")
+                    timeout = IDLE_TIMEOUT_S if authenticated and not playback_guard else REQUEST_TIMEOUT_S
+                    conn.settimeout(timeout)
+                    report(f"Waiting for request (timeout={timeout:g}s, playback_guard={playback_guard})")
                     msg = receive(reader)
                     if not isinstance(msg, dict):
                         raise ValueError("Expected JSON object")
@@ -35,6 +42,7 @@ def handle_connection(conn, cfg, player, log=print):
                     if not isinstance(supplied, str) or not secrets.compare_digest(
                             supplied.encode("utf-8"), cfg["token"].encode("utf-8")):
                         raise ValueError("Authentication failed: check matching token locally")
+                    authenticated = True
                     cmd = msg.get("command")
                     if cmd not in ("prepare", "play", "stop", "status", "bye"):
                         raise ValueError("Unknown command")
@@ -53,14 +61,17 @@ def handle_connection(conn, cfg, player, log=print):
                             raise ValueError("Parent/child audio settings mismatch")
                         player.prepare(path, msg["channel"])
                         current, played = msg["trial_id"], False
+                        playback_guard = False
                     elif cmd == "play":
                         if player is None or current != msg["trial_id"] or played:
                             raise ValueError("Stale or duplicate play, or not prepared")
                         player.play()
                         played = True
+                        playback_guard = True
                     elif cmd in ("stop", "bye"):
                         if player:
                             player.stop()
+                        playback_guard = False
                     elif cmd == "status":
                         result.update(audio_error=player.error if player else None,
                                       connection_only=player is None)

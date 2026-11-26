@@ -126,6 +126,7 @@ class Controller:
         rec = Recorder(self.cfg, self.folder / f"trial_{number:04d}.wav")
         self.event("trial_prepare", **row)
         pending = []
+        phase = "audio_prepare"
         try:
             self.post("準備中", number=number, total=len(self.trials), trial=trial)
             path = sound_path(trial["file"])
@@ -135,7 +136,12 @@ class Controller:
                                  sample_rate=self.cfg["sample_rate"])
             else:
                 self.player.prepare(path, channel)
+            phase = "microphone_start"
+            microphone_start = time.perf_counter()
+            self.event("microphone_start_requested")
             rec.start()
+            self.event("microphone_started", elapsed_s=time.perf_counter() - microphone_start)
+            phase = "settle"
             self.wait(self.cfg["settle_s"])
             while not self.inputs.empty():
                 self.event("ignored_input", data=self.inputs.get_nowait())
@@ -143,10 +149,12 @@ class Controller:
             self.accepting = True
             self.event("play_requested", trial_id=trial["trial_id"], requested_at=start)
             self.post("発音検出・回答待ち")
+            phase = "play"
             if pc == "child":
                 self.client.call("play", trial_id=trial["trial_id"])
             else:
                 self.player.play()
+            phase = "response"
             last_view = 0
             while True:
                 self.tick()
@@ -181,7 +189,7 @@ class Controller:
             row["outcome"] = score(trial["class"], trial["direction"], row["response"] or None)
             row["valid"] = True
         except Exception as e:
-            row["error"] = str(e)
+            row["error"] = f"phase={phase}: {e}"
         finally:
             self.accepting = False
             try:

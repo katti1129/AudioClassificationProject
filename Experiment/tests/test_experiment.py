@@ -134,6 +134,171 @@ class ControllerTests(unittest.TestCase):
 
 
 class NetworkTests(unittest.TestCase):
+    def test_slow_parent_microphone_start_keeps_child_connection(self):
+        from child_app import handle_connection
+        logs, errors = [], []
+        with tempfile.TemporaryDirectory() as d, socket.socket() as server:
+            server.bind(("127.0.0.1", 0))
+            server.listen(1)
+            server.settimeout(5)
+            cfg = common.config()
+            cfg.update(host="127.0.0.1", port=server.getsockname()[1], token="test-token",
+                       settle_s=.01, onset_timeout_s=.03, response_timeout_s=.03, silence_s=.01)
+            wav = Path(d) / "tone.wav"
+            sf.write(wav, np.full(200, .1), 48000)
+            trials = [{"trial_id": "1", "file": "tone.wav", "direction": "north", "class": "other"}]
+
+            def peer():
+                try:
+                    conn, _ = server.accept()
+                    handle_connection(conn, cfg, FakePlayer(cfg), log=logs.append)
+                except Exception as e:
+                    errors.append(e)
+
+            # The parent performs no network calls while opening the input device.
+            def slow_start(_):
+                time.sleep(2.3)
+
+            with patch.object(controller, "ROOT", Path(d)), \
+                 patch.object(controller, "Player", FakePlayer), \
+                 patch.object(controller, "Recorder", FakeRecorder), \
+                 patch.object(controller, "sound_path", return_value=wav), \
+                 patch("child_app.sound_path", return_value=wav), \
+                 patch.object(FakeRecorder, "start", slow_start):
+                thread = threading.Thread(target=peer, daemon=True)
+                thread.start()
+                c = controller.Controller(cfg, trials, "P", "support_on", "main", queue.Queue())
+                try:
+                    c.run()
+                finally:
+                    thread.join(5)
+                self.assertFalse(thread.is_alive())
+                self.assertEqual(errors, [])
+                with open(c.folder / "trials.csv", encoding="utf-8-sig") as f:
+                    row = next(csv.DictReader(f))
+                self.assertEqual(row["valid"], "True", (row["error"], logs))
+                self.assertEqual(row["outcome"], "correct_rejection")
+
+    def test_child_playback_watchdog_and_idle_after_stop(self):
+        from child_app import handle_connection
+
+        class TrackingPlayer(FakePlayer):
+            playing = False
+            def play(self): self.playing = True
+            def stop(self): self.playing = False
+
+        for stop_first in (False, True):
+            with self.subTest(stop_first=stop_first), tempfile.TemporaryDirectory() as d, socket.socket() as server:
+                wav = Path(d) / "tone.wav"
+                wav.write_bytes(b"fake stimulus; player is simulated")
+                cfg = common.config()
+                server.bind(("127.0.0.1", 0))
+                server.listen(1)
+                server.settimeout(5)
+                cfg.update(host="127.0.0.1", port=server.getsockname()[1], token="test-token")
+                player, logs, errors = TrackingPlayer(cfg), [], []
+
+                def peer():
+                    try:
+                        conn, _ = server.accept()
+                        handle_connection(conn, cfg, player, log=logs.append)
+                    except Exception as e:
+                        errors.append(e)
+
+                with patch("child_app.sound_path", return_value=wav):
+                    thread = threading.Thread(target=peer, daemon=True)
+                    thread.start()
+                    client = None
+                    try:
+                        client = Client(cfg)
+                        client.call("prepare", trial_id="1", file="tone.wav", channel=0,
+                                    sha256=common.digest(wav), sample_rate=cfg["sample_rate"], gain=cfg["gain"])
+                        client.call("play", trial_id="1")
+                        self.assertTrue(player.playing)
+                        if stop_first:
+                            client.call("stop")
+                            time.sleep(2.3)
+                            self.assertIsNone(client.call("status")["audio_error"])
+                            # Stopping must not permit an accidental replay of the same trial.
+                            with self.assertRaisesRegex(RuntimeError, "duplicate play"):
+                                client.call("play", trial_id="1")
+                        else:
+                            thread.join(3)
+                            self.assertFalse(thread.is_alive(), "Playback watchdog did not disconnect")
+                            self.assertIn("TimeoutError", "\n".join(logs))
+                        self.assertFalse(player.playing)
+                    finally:
+                        if client:
+                            client.close()
+                        thread.join(5)
+                    self.assertFalse(thread.is_alive())
+                    self.assertEqual(errors, [])
+
+    def test_child_idle_wait_is_bounded(self):
+        from child_app import handle_connection
+        logs = []
+        with socket.socket() as server, patch("child_app.IDLE_TIMEOUT_S", .2):
+            server.bind(("127.0.0.1", 0))
+            server.listen(1)
+            server.settimeout(3)
+            cfg = common.config()
+            cfg.update(host="127.0.0.1", port=server.getsockname()[1], token="test-token")
+            def peer():
+                conn, _ = server.accept()
+                handle_connection(conn, cfg, None, log=logs.append)
+            thread = threading.Thread(target=peer, daemon=True)
+            thread.start()
+            client = None
+            try:
+                client = Client(cfg)
+                client.call("status")
+                thread.join(2)
+                self.assertFalse(thread.is_alive())
+                self.assertIn("TimeoutError", "\n".join(logs))
+            finally:
+                if client:
+                    client.close()
+                thread.join(3)
+
+    def test_child_authentication_success_and_failure(self):
+        from child_app import handle_connection
+        for valid in (True, False):
+            with self.subTest(valid=valid), socket.socket() as server:
+                server.bind(("127.0.0.1", 0))
+                server.listen(1)
+                server.settimeout(3)
+                cfg = common.config()
+                cfg.update(host="127.0.0.1", port=server.getsockname()[1], token="private-test-token")
+                logs = []
+                def peer():
+                    conn, _ = server.accept()
+                    handle_connection(conn, cfg, None, log=logs.append)
+                thread = threading.Thread(target=peer, daemon=True)
+                thread.start()
+                client_cfg = dict(cfg)
+                if not valid:
+                    client_cfg["token"] = "different-private-token"
+                client = Client(client_cfg)
+                try:
+                    if valid:
+                        for _ in range(3):
+                            self.assertTrue(client.call("status")["connection_only"])
+                        client.call("bye")
+                    else:
+                        with self.assertRaisesRegex(RuntimeError, "Authentication failed"):
+                            client.call("status")
+                finally:
+                    client.close()
+                thread.join(3)
+                self.assertFalse(thread.is_alive())
+                joined = "\n".join(logs)
+                self.assertNotIn(cfg["token"], joined)
+                if valid:
+                    self.assertIn("Reply sent command=status", joined)
+                    self.assertIn("Session closed normally", joined)
+                else:
+                    self.assertIn("stage=authenticate", joined)
+
     def test_real_tcp_round_trip_and_reject_mismatched_reply(self):
         errors = []
         with socket.socket() as server:
