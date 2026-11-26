@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+results/
+sounds/*.wav
+config.local.json
+!manifest.example.csv
