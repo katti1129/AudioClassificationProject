@@ -20,15 +20,24 @@ def send(sock, message):
 class Client:
     def __init__(self, cfg):
         self.cfg = cfg
-        self.sock = socket.create_connection((cfg["host"], cfg["port"]), timeout=2)
+        try:
+            self.sock = socket.create_connection((cfg["host"], cfg["port"]), timeout=2)
+        except OSError as e:
+            raise ConnectionError(f"TCP connect to {cfg['host']}:{cfg['port']} failed: {e}") from e
         self.sock.settimeout(2)
         self.reader = self.sock.makefile("rb")
 
     def call(self, command, **kwargs):
         request_id = uuid.uuid4().hex
-        send(self.sock, dict(command=command, request_id=request_id,
-                             token=self.cfg["token"], **kwargs))
-        result = receive(self.reader)
+        try:
+            send(self.sock, dict(command=command, request_id=request_id,
+                                 token=self.cfg["token"], **kwargs))
+        except OSError as e:
+            raise ConnectionError(f"Send command={command} failed: {e}") from e
+        try:
+            result = receive(self.reader)
+        except (OSError, ValueError) as e:
+            raise ConnectionError(f"Receive reply command={command} failed: {e}") from e
         if result.get("request_id") != request_id or not result.get("ok"):
             raise RuntimeError(result.get("error", "Protocol mismatch"))
         return result

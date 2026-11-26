@@ -154,6 +154,32 @@ validは「ソフトが異常を検出しなかった」という意味であり
 
 ## 検証
 
+### 接続エラーの切り分け（音声機器なし）
+
+`Connected:`はTCPの接続を受け付けたという意味で、token認証や応答成功の意味ではありません。
+新しい`child_app.py`は受信・認証・処理・送信の段階をログに表示します。tokenの値は表示しません。
+旧版ではエラー応答をソケットを閉じた後に送ろうとしていたため、親PCに認証エラー等の理由が届かない問題も修正しました。
+
+両PCで最新版のPythonファイルを使用してください。`config.local.json`は各PCの既存設定を維持します。
+親GUIを停止し、Macの旧子プロセスをCtrl+Cで停止してから、MacのExperimentフォルダで：
+
+```bash
+.venv/bin/python child_app.py --bind 192.168.11.18 --connection-only
+```
+
+IPは実際のMacのIPに置き換えます。WindowsのExperimentフォルダで：
+
+```powershell
+.\.venv\Scripts\python.exe check_connection.py
+```
+
+5回の`PASS`と完了が出れば、TCP・認証・応答は成功です。これは音声の遅延校正ではありません。
+失敗時はWindowsの`FAIL`とMacの`stage=...`を確認します。`receive_request`なら要求の受信前／受信中、
+`authenticate`ならtoken照合、`send_reply_status`なら応答送信中です。段階情報だけでOSやWi-Fi側の原因が確定するわけではありません。
+
+確認後、MacはCtrl+Cで停止し、`--connection-only`を付けずに起動し直して実験を開始します。
+接続テスト中は親GUIから実験を開始しないでください。
+
 ```powershell
 .venv/Scripts/python.exe -m unittest discover -s tests -v
 ```
