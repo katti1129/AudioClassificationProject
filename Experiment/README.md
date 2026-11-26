@@ -180,6 +180,40 @@ IPは実際のMacのIPに置き換えます。WindowsのExperimentフォルダ�
 確認後、MacはCtrl+Cで停止し、`--connection-only`を付けずに起動し直して実験を開始します。
 接続テスト中は親GUIから実験を開始しないでください。
 
+#### Mac内の通信とPC間通信を比較する
+
+以下は仮想環境がExperimentの一つ上の階層にある場合です。
+最新版の`check_connection.py`をMacにもコピーします。設定ファイルを書き換える必要はありません。
+Macの子プロセスをCtrl+Cで停止し、Experimentフォルダで起動：
+
+```bash
+../.venv/bin/python child_app.py --bind 127.0.0.1 --connection-only
+```
+
+別のMacターミナルも同じExperimentフォルダに移動し、実行：
+
+```bash
+../.venv/bin/python check_connection.py --host 127.0.0.1
+```
+
+この確認はMac内部で完結し、Wi-FiやWindowsを経由しません。
+成功した場合、子プロセスをCtrl+Cで止め、MacのLAN IPに戻して起動：
+
+```bash
+../.venv/bin/python child_app.py --bind 192.168.11.18 --connection-only
+```
+
+WindowsのExperimentフォルダから実行：
+
+```powershell
+..\.venv\Scripts\python.exe check_connection.py --host 192.168.11.18
+```
+
+Mac内部だけ成功するなら、PC間の通信経路や各OSのアクセス制御などを次に調べます。
+Mac内部でも失敗するなら、まずMac側の実行環境や実際に使用しているファイルを確認します。
+どちらも、この結果だけで特定のファイアウォールやWi-Fiを原因と断定はできません。
+`--host`は接続確認時だけの上書きで、`config.local.json`には保存しません。
+
 ```powershell
 .venv/Scripts/python.exe -m unittest discover -s tests -v
 ```

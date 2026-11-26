@@ -32,5 +32,9 @@ def check(cfg):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="config.local.json")
+    parser.add_argument("--host", help="Override destination for this check only (e.g. 127.0.0.1)")
     args = parser.parse_args()
-    raise SystemExit(check(config(args.config)))
+    cfg = config(args.config)
+    if args.host:
+        cfg["host"] = args.host
+    raise SystemExit(check(cfg))
